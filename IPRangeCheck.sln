@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34701.34
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IPRangeCheckConsole", "IPRangeCheckConsole\IPRangeCheckConsole.csproj", "{9089C6B4-D72D-400D-B3F8-284497214BA2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IPRangeGenerator", "IPRangeGenerator\IPRangeGenerator.csproj", "{202F4B46-244A-4E98-9901-41374F680C30}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9089C6B4-D72D-400D-B3F8-284497214BA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9089C6B4-D72D-400D-B3F8-284497214BA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9089C6B4-D72D-400D-B3F8-284497214BA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9089C6B4-D72D-400D-B3F8-284497214BA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{202F4B46-244A-4E98-9901-41374F680C30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{202F4B46-244A-4E98-9901-41374F680C30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{202F4B46-244A-4E98-9901-41374F680C30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{202F4B46-244A-4E98-9901-41374F680C30}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {64EC8F41-8F7A-45C6-9259-0A31BF201CA9}
+	EndGlobalSection
+EndGlobal
