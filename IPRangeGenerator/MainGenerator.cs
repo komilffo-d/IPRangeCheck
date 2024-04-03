@@ -35,16 +35,16 @@ namespace IPRangeGenerator
 
         public MainGenerator(string? minIPAddress, string? maxIPAddress)
         {
-            if (IPAddress.TryParse(minIPAddress, out IPAddress? tempMinValue))
+            if (!IPAddress.TryParse(minIPAddress, out IPAddress? tempMinValue))
                 throw new Exception("Неправильный формат IP-адреса v4");
 
-            if (IPAddress.TryParse(maxIPAddress, out IPAddress? tempMaxValue))
+            if (!IPAddress.TryParse(maxIPAddress, out IPAddress? tempMaxValue))
                 throw new Exception("Неправильный формат IP-адреса v4");
 
             _random = RandomNumberGenerator.Create();
 
             MinValue = tempMinValue ?? MinValue;
-            MaxValue = tempMinValue ?? MaxValue;
+            MaxValue = tempMaxValue ?? MaxValue;
         }
         public IPAddress Generate()
         {
