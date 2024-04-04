@@ -2,7 +2,7 @@
   "profiles": {
     "IPRangeCheckConsole": {
       "commandName": "Project",
-      "commandLineArgs": "--file-log \"C:\\log.txt\" --file-output \"C:\\output.txt\""
+      "commandLineArgs": "--file-log \"C:\\Users\\Daniil\\Downloads\\log.txt\" --file-output \"C:\\Users\\Daniil\\Downloads\\output.txt\" --address-start \"192.168.0.1\" --address-mask  \"255.255.255.192\""
     }
   }
 }

@@ -48,7 +48,7 @@ namespace IPRangeGenerator
         public IPAddress Generate()
         {
 
-            Span<byte> ipBytes = stackalloc byte[4];
+            Span<byte> ipBytes = new byte[4];
             _random.NextBytes(ipBytes);
             return new IPAddress(ipBytes);
 
@@ -57,18 +57,18 @@ namespace IPRangeGenerator
         public IPAddress GenerateInRange(bool isInclusive = false)
         {
             byte[] minBytes = MinValue!.GetAddressBytes(), maxBytes = MaxValue!.GetAddressBytes();
-            Span<byte> ipBytes = stackalloc byte[4];
+            Span<byte> ipBytes = new byte[4];
             _random.NextBytes(ipBytes);
 
             for (int i = 0; i < COUNT_OCTET; i++)
             {
                 if (isInclusive)
                 {
-                    ipBytes[i] = Math.Max(Math.Min(ipBytes[i], maxBytes[i] > 0 ? maxBytes[i]++ : maxBytes[i]), minBytes[i] < 255 ? minBytes[i]-- : minBytes[i]);
+                    ipBytes[i] = (byte)_random.Next(minBytes[i] < 255 ? minBytes[i]-- : minBytes[i], maxBytes[i] > 0 ? maxBytes[i] : maxBytes[i] + 1);
                 }
                 else
                 {
-                    ipBytes[i] = Math.Max(Math.Min(ipBytes[i], maxBytes[i]), minBytes[i]);
+                    ipBytes[i] = (byte)_random.Next(minBytes[i], maxBytes[i] + 1);
                 }
 
 

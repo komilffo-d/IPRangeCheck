@@ -8,6 +8,6 @@ namespace IPRangeCheckConsole.Interfaces
 {
     internal interface IFileWriter
     {
-        public bool Write(IEnumerable<string> values);
+        public bool Write(string filePath, IEnumerable<string> values);
     }
 }

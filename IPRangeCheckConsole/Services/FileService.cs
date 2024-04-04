@@ -21,11 +21,11 @@ namespace IPRangeCheckConsole.Services
             }
         }
 
-        public bool Write(IEnumerable<string> values)
+        public bool Write(string filePath,IEnumerable<string> values)
         {
             try
             {
-                using var stream = new StreamWriter("ip_addresses.txt");
+                using var stream = new StreamWriter(filePath);
                 foreach (string? value in values)
                     stream.WriteLine(value.ToString());
 
