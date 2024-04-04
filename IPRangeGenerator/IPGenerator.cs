@@ -40,6 +40,7 @@ namespace IPRangeGenerator
 
             if (!IPAddress.TryParse(maxIPAddress, out IPAddress? tempMaxValue))
                 throw new InvalidDataException("Неправильный формат IP-адреса v4");
+            if(tempMinValue > tempMaxValue)
 
 
             MinValue = tempMinValue;

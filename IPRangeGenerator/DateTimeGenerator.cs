@@ -17,9 +17,11 @@ namespace IPRangeGenerator
 
 
         }
-
+        
         public DateTimeGenerator(DateTime minDateTime, DateTime maxDateTime) : base()
         {
+            if (minDateTime > maxDateTime)
+                throw new InvalidDataException("Минимальная дата больше максимальной");
             MinValue = minDateTime;
             MaxValue = maxDateTime;
         }
@@ -32,7 +34,8 @@ namespace IPRangeGenerator
             if (!DateTime.TryParseExact(maxDateTime, "d.M.yyyy H:m:s", null, DateTimeStyles.None, out DateTime tempMaxValue))
                 throw new InvalidDataException("Неправильный формат даты");
 
-
+            if (tempMinValue > tempMaxValue)
+                throw new InvalidDataException("Минимальная дата больше максимальной");
             MinValue = tempMinValue;
             MaxValue = tempMaxValue;
         }
@@ -40,7 +43,7 @@ namespace IPRangeGenerator
         {
             long totalSeconds = (long)(DateTime.MaxValue - DateTime.MinValue).TotalSeconds;
 
-            long randomLong = (long)(_random.NextDouble() * totalSeconds);
+            long randomLong = (long)Math.Floor(_random.NextDouble() * totalSeconds);
 
             return DateTime.MinValue.AddSeconds(randomLong);
         }
@@ -58,8 +61,7 @@ namespace IPRangeGenerator
                 totalSeconds -= totalSecondsInDay;
             }
             long randomLong = (long)(_random.NextDouble() * totalSeconds);
-
-            return MinValue.AddSeconds(totalSecondsInDay).AddSeconds(randomLong);
+            return MinValue.AddSeconds(randomLong);
         }
 
         public IEnumerable<DateTime> GenerateEnumerable(int count)
