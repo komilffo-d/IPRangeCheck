@@ -1,25 +1,27 @@
-﻿using IPRangeGenerator.Exceptions;
+﻿using IPRangeGenerator.Base;
+using IPRangeGenerator.Exceptions;
 using IPRangeGenerator.Interfaces;
 using System.Net;
 using System.Security.Cryptography;
 namespace IPRangeGenerator
 {
-    public class MainGenerator : IGenerator<IPAddress>
+    public class IPGenerator : BaseGenerator,IGenerator<IPAddress>
     {
 
         private const int COUNT_OCTET = 4;
-        private readonly RandomNumberGenerator _random;
+
+        public override Random _random { get; init; }
 
         public IPAddress? MinValue { get; init; } = new IPAddress(new byte[] { byte.MinValue, byte.MinValue, byte.MinValue, byte.MinValue });
         public IPAddress? MaxValue { get; init; } = new IPAddress(new byte[] { byte.MaxValue, byte.MaxValue, byte.MaxValue, byte.MaxValue });
 
 
-        public MainGenerator()
+        public IPGenerator()
         {
-            _random = RandomNumberGenerator.Create();
+
         }
 
-        public MainGenerator(byte[]? minIPAddress, byte[]? maxIPAddress)
+        public IPGenerator(byte[]? minIPAddress, byte[]? maxIPAddress):base()
         {
             if (minIPAddress is not null && minIPAddress.Length != 4)
                 throw new InvalidByteArraySizeException(4, minIPAddress.Length);
@@ -27,30 +29,28 @@ namespace IPRangeGenerator
             if (maxIPAddress is not null && maxIPAddress.Length != 4)
                 throw new InvalidByteArraySizeException(4, maxIPAddress.Length);
 
-            _random = RandomNumberGenerator.Create();
 
             MinValue = minIPAddress is not null ? new IPAddress(minIPAddress) : MinValue;
             MaxValue = maxIPAddress is not null ? new IPAddress(maxIPAddress) : MaxValue;
         }
 
-        public MainGenerator(string? minIPAddress, string? maxIPAddress)
+        public IPGenerator(string? minIPAddress, string? maxIPAddress) : base()
         {
             if (!IPAddress.TryParse(minIPAddress, out IPAddress? tempMinValue))
-                throw new Exception("Неправильный формат IP-адреса v4");
+                throw new InvalidDataException("Неправильный формат IP-адреса v4");
 
             if (!IPAddress.TryParse(maxIPAddress, out IPAddress? tempMaxValue))
-                throw new Exception("Неправильный формат IP-адреса v4");
+                throw new InvalidDataException("Неправильный формат IP-адреса v4");
 
-            _random = RandomNumberGenerator.Create();
 
-            MinValue = tempMinValue ?? MinValue;
-            MaxValue = tempMaxValue ?? MaxValue;
+            MinValue = tempMinValue;
+            MaxValue = tempMaxValue;
         }
         public IPAddress Generate()
         {
 
             Span<byte> ipBytes = stackalloc byte[4];
-            _random.GetBytes(ipBytes);
+            _random.NextBytes(ipBytes);
             return new IPAddress(ipBytes);
 
         }
@@ -59,7 +59,7 @@ namespace IPRangeGenerator
         {
             byte[] minBytes = MinValue!.GetAddressBytes(), maxBytes = MaxValue!.GetAddressBytes();
             Span<byte> ipBytes = stackalloc byte[4];
-            _random.GetBytes(ipBytes);
+            _random.NextBytes(ipBytes);
 
             for (int i = 0; i < COUNT_OCTET; i++)
             {

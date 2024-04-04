@@ -2,6 +2,7 @@
 {
     internal interface IGenerator<T>
     {
+
         T? MinValue { get; init; }
 
         T? MaxValue { get; init; }

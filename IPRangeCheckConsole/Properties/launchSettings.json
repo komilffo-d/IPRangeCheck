@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "IPRangeCheckConsole": {
+      "commandName": "Project",
+      "commandLineArgs": "--file-log \"привет\""
+    }
+  }
+}
