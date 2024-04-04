@@ -22,6 +22,7 @@ namespace IPRangeCheckConsole
         }
         static async Task Main(string[] args)
         {
+            
             await Parser.Default.ParseArguments<CLIOptions>(args).MapResult(async (CLIOptions opts) =>
             {
 

@@ -22,9 +22,10 @@ namespace IPRangeGenerator.Services
             else if (uintIpAddress > uintIpAddressIn)
                 result = 1;
 
-            else 
+            else
                 result = -1;
 
         }
+
     }
 }
