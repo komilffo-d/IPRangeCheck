@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace IPRangeCheckConsole.Interfaces
 {
-    internal class IFileWriter
+    internal interface IFileWriter
     {
+        public bool Write(IEnumerable<object> values);
     }
 }

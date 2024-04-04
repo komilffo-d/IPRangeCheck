@@ -1,15 +1,26 @@
-﻿using IPRangeGenerator;
+﻿using IPRangeCheckConsole.Interfaces;
+using IPRangeCheckConsole.Services;
+using IPRangeGenerator;
+using Microsoft.Extensions.DependencyInjection;
 using System.Globalization;
 using System.Net;
 
 namespace IPRangeCheckConsole
 {
-    internal class Program
+    internal sealed class Program
     {
+        static Program()
+        {
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("ru-RU");
+            ServiceProvider serviceProvider = new ServiceCollection()
+            .AddSingleton<IFileReader, FileService>()
+            .AddSingleton<IFileWriter, FileService>()
+            .BuildServiceProvider();
+        }
         static void Main(string[] args)
         {
+            FileService fileService = new FileService();
 
-            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("ru-RU");
 
             IPGenerator generator;
             DateTimeGenerator generator2;
@@ -21,14 +32,17 @@ namespace IPRangeCheckConsole
 
                 IEnumerable<IPAddress> ipAddresses = generator.GenerateEnumerableInRange(100);
 
-                IEnumerable<DateTime> dateTimes = generator2.GenerateEnumerableInRange(100,true);
+                IEnumerable<DateTime> dateTimes = generator2.GenerateEnumerableInRange(100, true);
 
-                var collection = ipAddresses.Zip(dateTimes);
+                var collection = ipAddresses.Zip(dateTimes, (ip, dateTime) => (Ip: ip, DateTime: dateTime));
 
                 foreach (var item in collection)
                 {
-                    Console.WriteLine(string.Format("{0, 20}  ||  {1,30}", item.First,item.Second));
+                    Console.WriteLine(string.Format("{0, 20}  ||  {1,30}", item.Ip, item.DateTime));
+
                 }
+                fileService.Write(ipAddresses);
+
             }
             catch (Exception ex)
             {

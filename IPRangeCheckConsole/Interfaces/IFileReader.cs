@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace IPRangeCheckConsole.Interfaces
 {
-    internal class IFileReader
+    internal interface IFileReader
     {
+        public bool Read();
     }
 }

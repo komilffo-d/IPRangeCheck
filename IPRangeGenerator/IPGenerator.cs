@@ -2,10 +2,9 @@
 using IPRangeGenerator.Exceptions;
 using IPRangeGenerator.Interfaces;
 using System.Net;
-using System.Security.Cryptography;
 namespace IPRangeGenerator
 {
-    public class IPGenerator : BaseGenerator,IGenerator<IPAddress>
+    public class IPGenerator : BaseGenerator, IGenerator<IPAddress>
     {
 
         private const int COUNT_OCTET = 4;
@@ -21,7 +20,7 @@ namespace IPRangeGenerator
 
         }
 
-        public IPGenerator(byte[]? minIPAddress, byte[]? maxIPAddress):base()
+        public IPGenerator(byte[]? minIPAddress, byte[]? maxIPAddress) : base()
         {
             if (minIPAddress is not null && minIPAddress.Length != 4)
                 throw new InvalidByteArraySizeException(4, minIPAddress.Length);
