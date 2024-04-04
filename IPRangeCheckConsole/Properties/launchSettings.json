@@ -1,7 +1,8 @@
 {
   "profiles": {
     "IPRangeCheckConsole": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "--file-log \"C:\\log.txt\" --file-output \"C:\\output.txt\""
     }
   }
 }

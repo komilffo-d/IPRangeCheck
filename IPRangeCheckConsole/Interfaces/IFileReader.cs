@@ -8,6 +8,8 @@ namespace IPRangeCheckConsole.Interfaces
 {
     internal interface IFileReader
     {
-        public bool Read();
+        public bool Read(string filePath);
+
+        public IAsyncEnumerable<string> ReadAsync(string filePath);
     }
 }

@@ -4,9 +4,21 @@ namespace IPRangeCheckConsole.Services
 {
     internal class FileService : IFileReader, IFileWriter
     {
-        public bool Read()
+        public bool Read(string filePath)
         {
             throw new NotImplementedException();
+        }
+
+        public async IAsyncEnumerable<string> ReadAsync(string filePath)
+        {
+            using (StreamReader reader = new StreamReader(filePath))
+            {
+                string line;
+                while ((line = await reader.ReadLineAsync()) != null)
+                {
+                    yield return line;
+                }
+            }
         }
 
         public bool Write(IEnumerable<string> values)

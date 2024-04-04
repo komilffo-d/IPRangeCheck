@@ -25,9 +25,12 @@ namespace IPRangeCheckConsole
             await Parser.Default.ParseArguments<CLIOptions>(args).MapResult(async (CLIOptions opts) =>
             {
                 FileService fileService = new FileService();
+                await foreach(string IP in fileService.ReadAsync(opts.FileLog))
+                {
+                    await Console.Out.WriteLineAsync(IP);
+                }
 
-
-                IPGenerator generator;
+/*                IPGenerator generator;
                 DateTimeGenerator generator2;
                 try
                 {
@@ -56,7 +59,7 @@ namespace IPRangeCheckConsole
                 finally
                 {
                     Console.WriteLine("\n\nПрограмма завершена!");
-                }
+                }*/
             },err => Task.FromResult(-1));
 
 
