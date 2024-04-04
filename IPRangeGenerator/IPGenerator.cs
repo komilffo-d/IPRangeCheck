@@ -1,6 +1,7 @@
 ﻿using IPRangeGenerator.Base;
 using IPRangeGenerator.Exceptions;
 using IPRangeGenerator.Interfaces;
+using IPRangeGenerator.Services;
 using System.Net;
 namespace IPRangeGenerator
 {
@@ -19,7 +20,6 @@ namespace IPRangeGenerator
         {
 
         }
-
         public IPGenerator(byte[]? minIPAddress, byte[]? maxIPAddress) : base()
         {
             if (minIPAddress is not null && minIPAddress.Length != 4)
@@ -40,10 +40,12 @@ namespace IPRangeGenerator
 
             if (!IPAddress.TryParse(maxIPAddress, out IPAddress? tempMaxValue))
                 throw new InvalidDataException("Неправильный формат IP-адреса v4");
-            if(tempMinValue > tempMaxValue)
+            tempMaxValue.CompareTo(tempMinValue, out int result);
+            if (result < 0)
+                throw new InvalidDataException("Нижняя граница IP-зоны выше верхней");
 
 
-            MinValue = tempMinValue;
+                MinValue = tempMinValue;
             MaxValue = tempMaxValue;
         }
         public IPAddress Generate()

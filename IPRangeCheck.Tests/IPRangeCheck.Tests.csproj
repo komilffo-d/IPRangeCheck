@@ -17,6 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\IPRangeCheckConsole\IPRangeCheckConsole.csproj" />
+    <ProjectReference Include="..\IPRangeGenerator\IPRangeGenerator.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
 
