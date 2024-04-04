@@ -11,17 +11,18 @@ namespace IPRangeCheckConsole.Services
 
         public async IAsyncEnumerable<string> ReadAsync(string filePath)
         {
-            using (StreamReader reader = new StreamReader(filePath))
+            using StreamReader reader = new StreamReader(filePath);
+
+
+            string line;
+            while ((line = await reader.ReadLineAsync()) != null)
             {
-                string line;
-                while ((line = await reader.ReadLineAsync()) != null)
-                {
-                    yield return line;
-                }
+                yield return line;
             }
+
         }
 
-        public bool Write(string filePath,IEnumerable<string> values)
+        public bool Write(string filePath, IEnumerable<string> values)
         {
             try
             {

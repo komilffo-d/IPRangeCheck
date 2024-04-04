@@ -1,7 +1,7 @@
 ﻿using CommandLine;
 using IPRangeCheckConsole.Misc;
 using IPRangeCheckConsole.Services;
-using IPRangeGenerator;
+using Microsoft.Extensions.Configuration;
 using NetTools;
 using System.Globalization;
 using System.Net;
@@ -42,32 +42,44 @@ namespace IPRangeCheckConsole
 
                 fileService.Write(opts.FileOutput, dictIpAddresses.Select(t => $"{t.Key} Количество обращений: {t.Value}"));
 
-/*                IPGenerator generator;
-                DateTimeGenerator generator2;
-                try
-                {
-                    generator = new IPGenerator("192.168.0.50", "192.168.0.100");
+                /*                IPGenerator generator;
+                                DateTimeGenerator generator2;
+                                try
+                                {
+                                    generator = new IPGenerator("192.168.0.50", "192.168.0.100");
 
-                    generator2 = new DateTimeGenerator("2.4.2001 6:8:20", "6.4.2001 12:45:30");
+                                    generator2 = new DateTimeGenerator("2.4.2001 6:8:20", "6.4.2001 12:45:30");
 
-                    IEnumerable<IPAddress> ipAddresses = generator.GenerateEnumerableInRange(100000, false);
+                                    IEnumerable<IPAddress> ipAddresses = generator.GenerateEnumerableInRange(100000, false);
 
-                    IEnumerable<DateTime> dateTimes = generator2.GenerateEnumerableInRange(100000, true);
+                                    IEnumerable<DateTime> dateTimes = generator2.GenerateEnumerableInRange(100000, true);
 
-                    var collection = ipAddresses.Zip(dateTimes, (ip, dateTime) => new Tuple<IPAddress, DateTime>(ip, dateTime));
+                                    var collection = ipAddresses.Zip(dateTimes, (ip, dateTime) => new Tuple<IPAddress, DateTime>(ip, dateTime));
 
-                    fileService.Write(opts.FileLog, collection.Select(t => $"{t.Item1} {t.Item2.ToString("d.M.yyyy H:m")}"));
+                                    fileService.Write(opts.FileLog, collection.Select(t => $"{t.Item1} {t.Item2.ToString("d.M.yyyy H:m")}"));
 
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                }
-                finally
-                {
-                    Console.WriteLine("\n\nПрограмма завершена!");
-                }*/
-            }, err => Task.FromResult(-1));
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine(ex);
+                                }
+                                finally
+                                {
+                                    Console.WriteLine("\n\nПрограмма завершена!");
+                                }*/
+            }, err =>
+            {
+                IConfiguration config = new ConfigurationBuilder()
+                                        .AddIniFile("config.ini")
+                                        .Build();
+
+                IConfigurationSection section = config.GetSection("File");
+                IConfigurationSection address = config.GetSection("Address");
+
+                Console.WriteLine("Ошибка");
+
+                return Task.CompletedTask;
+            });
 
 
 
