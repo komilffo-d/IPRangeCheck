@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IPRangeGenerator", "IPRange
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IPRangeGenerator.Tests", "IPRangeGenerator.Tests\IPRangeGenerator.Tests.csproj", "{68124E66-B511-4D61-9F79-E436BAE3D46D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IPRangeCheckConsole.Tests", "IPRangeCheckConsole.Tests\IPRangeCheckConsole.Tests.csproj", "{921BE13B-801D-422C-AF60-877AD3D76C25}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{68124E66-B511-4D61-9F79-E436BAE3D46D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68124E66-B511-4D61-9F79-E436BAE3D46D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68124E66-B511-4D61-9F79-E436BAE3D46D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{921BE13B-801D-422C-AF60-877AD3D76C25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{921BE13B-801D-422C-AF60-877AD3D76C25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{921BE13B-801D-422C-AF60-877AD3D76C25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{921BE13B-801D-422C-AF60-877AD3D76C25}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

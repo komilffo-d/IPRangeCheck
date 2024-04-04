@@ -1,6 +1,6 @@
 ﻿namespace IPRangeGenerator.Exceptions
 {
-    internal class InvalidByteArraySizeException : Exception
+    public class InvalidByteArraySizeException : Exception
     {
         public int ExpectedSize { get; }
 

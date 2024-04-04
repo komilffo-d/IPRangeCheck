@@ -1,6 +1,7 @@
 ﻿using IPRangeGenerator.Base;
 using IPRangeGenerator.Exceptions;
 using IPRangeGenerator.Interfaces;
+using IPRangeGenerator.Misc;
 using IPRangeGenerator.Services;
 using System.Net;
 namespace IPRangeGenerator
@@ -20,32 +21,36 @@ namespace IPRangeGenerator
         {
 
         }
-        public IPGenerator(byte[]? minIPAddress, byte[]? maxIPAddress) : base()
+        public IPGenerator(byte[] minIPAddress, byte[] maxIPAddress) : base()
         {
-            if (minIPAddress is not null && minIPAddress.Length != 4)
+            if (minIPAddress is null || minIPAddress.Length != 4)
                 throw new InvalidByteArraySizeException(4, minIPAddress.Length);
 
-            if (maxIPAddress is not null && maxIPAddress.Length != 4)
+            if (maxIPAddress is null || maxIPAddress.Length != 4)
                 throw new InvalidByteArraySizeException(4, maxIPAddress.Length);
 
+            IPAddress tempMinValue = new IPAddress(minIPAddress), tempMaxValue = new IPAddress(maxIPAddress);
+            tempMaxValue.CompareTo(tempMinValue, out int result);
+            if (result < 0)
+                throw new InvalidDataException("Нижняя граница IP-зоны выше верхней");
 
             MinValue = minIPAddress is not null ? new IPAddress(minIPAddress) : MinValue;
             MaxValue = maxIPAddress is not null ? new IPAddress(maxIPAddress) : MaxValue;
         }
 
-        public IPGenerator(string? minIPAddress, string? maxIPAddress) : base()
+        public IPGenerator(string minIPAddress, string maxIPAddress) : base()
         {
-            if (!IPAddress.TryParse(minIPAddress, out IPAddress? tempMinValue))
+            if (!IPAddressUtility.IsValidIPv4(minIPAddress) || !IPAddress.TryParse(minIPAddress, out IPAddress? tempMinValue))
                 throw new InvalidDataException("Неправильный формат IP-адреса v4");
 
-            if (!IPAddress.TryParse(maxIPAddress, out IPAddress? tempMaxValue))
+            if (!IPAddressUtility.IsValidIPv4(maxIPAddress) ||  !IPAddress.TryParse(maxIPAddress, out IPAddress? tempMaxValue))
                 throw new InvalidDataException("Неправильный формат IP-адреса v4");
             tempMaxValue.CompareTo(tempMinValue, out int result);
             if (result < 0)
                 throw new InvalidDataException("Нижняя граница IP-зоны выше верхней");
 
 
-                MinValue = tempMinValue;
+            MinValue = tempMinValue;
             MaxValue = tempMaxValue;
         }
         public IPAddress Generate()
