@@ -9,15 +9,13 @@ namespace IPRangeCheckConsole.Services
             throw new NotImplementedException();
         }
 
-        public bool Write(IEnumerable<object> values)
+        public bool Write(IEnumerable<string> values)
         {
             try
             {
                 using var stream = new StreamWriter("ip_addresses.txt");
-                foreach (var value in values)
-                {
+                foreach (string? value in values)
                     stream.WriteLine(value.ToString());
-                }
 
                 return true;
             }
