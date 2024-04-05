@@ -19,11 +19,11 @@ namespace IPRangeCheckConsole.Misc
         public string AddressMask { get; set; }
 
         [Option(shortName: 't', longName: "time-start", Required = true, Default = "01.01.1900", HelpText = "Нижняя граница временного интервала")]
-        public string TimeStart { get; set; }
+        public DateTime TimeStart { get; set; }
 
         [Option(shortName: 'e', longName: "time-end", Required = true, Default = "31.12.2099", HelpText = "Верхняя граница временного интервала")]
 
-        public string TimeEnd { get; set; }
+        public DateTime TimeEnd { get; set; }
 
 
     }
