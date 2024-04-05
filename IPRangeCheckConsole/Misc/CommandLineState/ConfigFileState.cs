@@ -1,10 +1,20 @@
-﻿namespace IPRangeCheckConsole.Misc.CommandLineState
+﻿using Microsoft.Extensions.Configuration;
+
+namespace IPRangeCheckConsole.Misc.CommandLineState
 {
     public class ConfigFileState : ArgumentState
     {
-        public override Task<bool> ArgumentProcessAsync(string[]? args)
+        public override async Task<bool> ArgumentProcessAsync(string[]? args = null)
         {
-            throw new NotImplementedException();
+            IConfiguration config = new ConfigurationBuilder()
+                        .AddIniFile("config.ini")
+                        .Build();
+
+            IConfigurationSection section = config.GetSection("File");
+            IConfigurationSection address = config.GetSection("Address");
+
+            Console.WriteLine("Ошибка");
+            return true;
         }
     }
 }

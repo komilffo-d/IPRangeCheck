@@ -20,7 +20,7 @@ namespace IPRangeCheckConsole.Misc.CommandLineState
             _fileWriter = fileWriter;
             _fileReader = fileReader;
         }
-        public override async Task<bool> ArgumentProcessAsync(string[]? args)
+        public override async Task<bool> ArgumentProcessAsync(string[]? args=null)
         {
 
             Parser parser = new Parser(ps => ps.ParsingCulture = CultureInfo.DefaultThreadCurrentCulture);
@@ -28,8 +28,8 @@ namespace IPRangeCheckConsole.Misc.CommandLineState
             await parser.ParseArguments<CLIOptions>(args).MapResult(async (CLIOptions opts) =>
             {
 
-                string AddressStart = opts.AddressStart ?? Environment.GetEnvironmentVariable("ADDRESS_START") ?? string.Empty;
-                string AddressMask = opts.AddressMask ?? Environment.GetEnvironmentVariable("ADDRESS_MASK") ?? string.Empty;
+                string AddressStart = opts.AddressStart;
+                string AddressMask = opts.AddressMask;
                 DateTime timeStart = opts.TimeStart;
                 DateTime timeEnd = opts.TimeEnd.AddDays(1).AddTicks(-1);
 
@@ -55,7 +55,7 @@ namespace IPRangeCheckConsole.Misc.CommandLineState
                     key.Clear();
                 }
 
-                _fileWriter.Write(opts.FileOutput, dictIpAddresses.Select(t => $"{t.Key} Количество обращений: {t.Value}"));
+                _fileWriter.WriteAsync(opts.FileOutput, dictIpAddresses.Select(t => $"{t.Key} Количество обращений: {t.Value}"));
 
                 /*                IPGenerator generator;
                                 DateTimeGenerator generator2;
@@ -85,14 +85,7 @@ namespace IPRangeCheckConsole.Misc.CommandLineState
                
             }, err =>
             {
-                IConfiguration config = new ConfigurationBuilder()
-                                        .AddIniFile("config.ini")
-                                        .Build();
-
-                IConfigurationSection section = config.GetSection("File");
-                IConfigurationSection address = config.GetSection("Address");
-
-                Console.WriteLine("Ошибка");
+                _context.SwitchToState(new ConfigFileState());
 
                 return Task.CompletedTask;
             });

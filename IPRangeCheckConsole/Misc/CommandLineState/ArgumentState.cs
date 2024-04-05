@@ -3,7 +3,7 @@
     public abstract class ArgumentState
     {
 
-        private CommandLineContext _context;
+        private protected CommandLineContext _context;
 
         public void SetContext(CommandLineContext context)
         {

@@ -2,9 +2,11 @@
 {
     internal class EnvironmentVariableState : ArgumentState
     {
-        public override Task<bool> ArgumentProcessAsync(string[]? args)
+        public override async Task<bool> ArgumentProcessAsync(string[]? args = null)
         {
-            throw new NotImplementedException();
+            string? AddressStart = Environment.GetEnvironmentVariable("ADDRESS_START");
+            string? AddressMask = Environment.GetEnvironmentVariable("ADDRESS_MASK");
+            return false;
         }
     }
 }
