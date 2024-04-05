@@ -17,7 +17,7 @@ namespace IPRangeGenerator
 
 
         }
-        
+
         public DateTimeGenerator(DateTime minDateTime, DateTime maxDateTime) : base()
         {
             if (minDateTime > maxDateTime)
@@ -49,19 +49,14 @@ namespace IPRangeGenerator
         }
 
 
-        public DateTime GenerateInRange(bool isInclusive = false)
+        public DateTime GenerateInRange(bool isInclusive = true)
         {
-            long totalSeconds = (long)(this.MaxValue - this.MinValue).TotalSeconds;
-            long totalSecondsInDay = default(long);
-            if (isInclusive)
-            {
-                TimeSpan secondsInDay = TimeSpan.FromDays(1);
-                totalSecondsInDay = (long)secondsInDay.TotalSeconds;
+            DateTime tempMinDateTime = this.MinValue;
+            DateTime tempMaxDateTime = this.MaxValue;
+            if (!isInclusive)
+                tempMinDateTime=tempMinDateTime.AddSeconds(TimeSpan.FromMinutes(1).TotalSeconds);
 
-                totalSeconds -= totalSecondsInDay;
-            }
-            long randomLong = (long)(_random.NextDouble() * totalSeconds);
-            return MinValue.AddSeconds(randomLong);
+            return tempMinDateTime.AddSeconds(RandomNext(minValue: tempMinDateTime, maxValue: tempMaxDateTime,isInclusive));
         }
 
         public IEnumerable<DateTime> GenerateEnumerable(int count)
@@ -72,13 +67,25 @@ namespace IPRangeGenerator
             }
         }
 
-        public IEnumerable<DateTime> GenerateEnumerableInRange(int count, bool isInclusive = false)
+        public IEnumerable<DateTime> GenerateEnumerableInRange(int count, bool isInclusive = true)
         {
             for (int i = 0; i < count; i++)
             {
                 yield return GenerateInRange(isInclusive);
             }
         }
-
+        private protected long RandomNext(DateTime minValue, DateTime maxValue, bool isInclusive = true)
+        {
+            long totalSeconds = (long)(maxValue - minValue).TotalSeconds;
+            long totalSecondsInMinute = default(long);
+            if (!isInclusive)
+            {
+                TimeSpan secondsInDay = TimeSpan.FromMinutes(1);
+                totalSecondsInMinute = (long)secondsInDay.TotalSeconds;
+            }
+            totalSeconds -= totalSecondsInMinute;
+            long randomSeconds = (long)Math.Round(_random.NextDouble() * (totalSeconds + double.Epsilon));
+            return randomSeconds;
+        }
     }
 }

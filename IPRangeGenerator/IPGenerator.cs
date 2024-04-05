@@ -43,7 +43,7 @@ namespace IPRangeGenerator
             if (!IPAddressUtility.IsValidIPv4(minIPAddress) || !IPAddress.TryParse(minIPAddress, out IPAddress? tempMinValue))
                 throw new InvalidDataException("Неправильный формат IP-адреса v4");
 
-            if (!IPAddressUtility.IsValidIPv4(maxIPAddress) ||  !IPAddress.TryParse(maxIPAddress, out IPAddress? tempMaxValue))
+            if (!IPAddressUtility.IsValidIPv4(maxIPAddress) || !IPAddress.TryParse(maxIPAddress, out IPAddress? tempMaxValue))
                 throw new InvalidDataException("Неправильный формат IP-адреса v4");
             tempMaxValue.CompareTo(tempMinValue, out int result);
             if (result < 0)
@@ -62,25 +62,14 @@ namespace IPRangeGenerator
 
         }
 
-        public IPAddress GenerateInRange(bool isInclusive = false)
+        public IPAddress GenerateInRange(bool isInclusive = true)
         {
             byte[] minBytes = MinValue!.GetAddressBytes(), maxBytes = MaxValue!.GetAddressBytes();
             Span<byte> ipBytes = new byte[4];
             _random.NextBytes(ipBytes);
 
             for (int i = 0; i < COUNT_OCTET; i++)
-            {
-                if (isInclusive)
-                {
-                    ipBytes[i] = (byte)_random.Next(minBytes[i] < 255 ? minBytes[i]-- : minBytes[i], maxBytes[i] > 0 ? maxBytes[i] : maxBytes[i] + 1);
-                }
-                else
-                {
-                    ipBytes[i] = (byte)_random.Next(minBytes[i], maxBytes[i] + 1);
-                }
-
-
-            }
+                ipBytes[i] = RandomNext(minValue: minBytes[i], maxValue: maxBytes[i], isInclusive);
             return new IPAddress(ipBytes);
 
 
@@ -95,7 +84,7 @@ namespace IPRangeGenerator
 
         }
 
-        public IEnumerable<IPAddress> GenerateEnumerableInRange(int count, bool isInclusive = false)
+        public IEnumerable<IPAddress> GenerateEnumerableInRange(int count, bool isInclusive = true)
         {
             {
                 for (int i = 0; i < count; i++)
@@ -103,6 +92,25 @@ namespace IPRangeGenerator
                     yield return GenerateInRange(isInclusive);
                 }
             }
+        }
+
+        private protected byte RandomNext(byte minValue, byte maxValue, bool isInclusive = true)
+        {
+            if (isInclusive)
+            {
+                if (minValue <= maxValue)
+                    return (byte)_random.Next(minValue,  (int)maxValue  + 1);
+                else
+                    return (byte)_random.Next(maxValue, (int)minValue + 1);
+            }
+            else
+            {
+                if (minValue <= maxValue)
+                    return (byte)_random.Next(minValue, maxValue);
+                else
+                    return (byte)_random.Next(maxValue, minValue);
+            }
+
         }
 
     }
