@@ -1,4 +1,6 @@
-﻿using IPRangeGenerator;
+﻿using IPRangeCheckConsole.Interfaces;
+using IPRangeGenerator;
+using System.Net;
 
 namespace IPRangeCheckConsole.Services
 {
@@ -27,9 +29,33 @@ namespace IPRangeCheckConsole.Services
             return isCreated;
         }
         public static FileGenerator? GetEntity() => _entity;
-        public void 
-        private IPGenerator _IPGenerator { get; set; }
-        private DateTimeGenerator _DateTimeGenerator { get;  set; }
+
+        public void SetIPGenerator(IPGenerator generator)
+        {
+            _IPGenerator = generator;
+        }
+        public void SetDateTimeGenerator(DateTimeGenerator generator)
+        {
+            _DateTimeGenerator = generator;
+        }
+        public async Task WriteFileAsync(string pathFile,  int countEntries,  bool isInclusive)
+        {
+            if (_IPGenerator is null || _DateTimeGenerator is null)
+                throw new InvalidOperationException("Не назначены генераторы IP-адрессов и дат!");
+
+            IEnumerable<IPAddress> ipAddresses = _IPGenerator.GenerateEnumerableInRange(countEntries, isInclusive);
+
+            IEnumerable<DateTime> dateTimes = _DateTimeGenerator.GenerateEnumerableInRange(countEntries, isInclusive);
+
+            IEnumerable<string> collection = ipAddresses.Zip(dateTimes, (ip, dateTime) => (IP: ip, DateTime: dateTime))
+                                                        .Select(t => $"{t.IP}|{t.DateTime.ToString("yyyy-MM-dd HH:mm:ss")}");
+
+            await _fileService.Value.WriteAsync(pathFile, collection);
+        }
+
+        private readonly Lazy<IFileWriter> _fileService = new Lazy<IFileWriter>(() => new FileService());
+        private IPGenerator? _IPGenerator { get; set; }
+        private DateTimeGenerator? _DateTimeGenerator { get; set; }
 
     }
 }

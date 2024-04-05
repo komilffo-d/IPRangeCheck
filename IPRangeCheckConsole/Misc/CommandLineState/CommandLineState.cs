@@ -57,31 +57,6 @@ namespace IPRangeCheckConsole.Misc.CommandLineState
 
                 _fileWriter.WriteAsync(opts.FileOutput, dictIpAddresses.Select(t => $"{t.Key} Количество обращений: {t.Value}"));
 
-                /*                IPGenerator generator;
-                                DateTimeGenerator generator2;
-                                try
-                                {
-                                    generator = new IPGenerator("192.168.0.10", "192.168.1.19");
-
-                                    generator2 = new DateTimeGenerator("2.4.2001 6:8:20", "6.4.2001 6:15:00");
-
-                                    IEnumerable<IPAddress> ipAddresses = generator.GenerateEnumerableInRange(10000, true);
-
-                                    IEnumerable<DateTime> dateTimes = generator2.GenerateEnumerableInRange(10000, true);
-
-                                    var collection = ipAddresses.Zip(dateTimes, (ip, dateTime) => new Tuple<IPAddress, DateTime>(ip, dateTime));
-
-                                    fileService.Write(opts.FileLog, collection.Select(t => $"{t.Item1}|{t.Item2.ToString("yyyy-MM-dd HH:mm:ss")}"));
-
-                                }
-                                catch (Exception ex)
-                                {
-                                    Console.WriteLine(ex);
-                                }
-                                finally
-                                {
-                                    Console.WriteLine("\n\nПрограмма завершена!");
-                                }*/
                
             }, err =>
             {

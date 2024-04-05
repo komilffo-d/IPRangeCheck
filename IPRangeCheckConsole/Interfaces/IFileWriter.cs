@@ -8,6 +8,6 @@ namespace IPRangeCheckConsole.Interfaces
 {
     internal interface IFileWriter
     {
-        public void WriteAsync(string filePath, IEnumerable<string> values);
+        public Task WriteAsync(string filePath, IEnumerable<string> values);
     }
 }

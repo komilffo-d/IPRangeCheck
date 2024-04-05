@@ -22,17 +22,17 @@ namespace IPRangeCheckConsole.Services
 
         }
 
-        public async void WriteAsync(string filePath, IEnumerable<string> values)
+        public async Task WriteAsync(string filePath, IEnumerable<string> values)
         {
-
-            using var writer = new StreamWriter(filePath);
-
-            foreach (string line in values)
+            // await для очистки буффера
+            await using (var writer = new StreamWriter(filePath, false))
             {
-                await writer.WriteLineAsync(line);
+                foreach (string line in values)
+                {
+                    await writer.WriteLineAsync(line);
+                }
             }
-
-
+            
 
         }
     }
