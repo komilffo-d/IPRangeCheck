@@ -22,7 +22,6 @@ namespace IPRangeCheckConsole.Misc
         public DateTime TimeStart { get; set; }
 
         [Option(shortName: 'e', longName: "time-end", Required = true, Default = "31.12.2099", HelpText = "Верхняя граница временного интервала")]
-
         public DateTime TimeEnd { get; set; }
 
 

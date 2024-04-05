@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using IniParser;
+using IniParser.Parser;
+using Microsoft.Extensions.Configuration;
 
 namespace IPRangeCheckConsole.Misc.CommandLineState
 {
@@ -6,14 +8,13 @@ namespace IPRangeCheckConsole.Misc.CommandLineState
     {
         public override async Task<bool> ArgumentProcessAsync(string[]? args = null)
         {
-            IConfiguration config = new ConfigurationBuilder()
-                        .AddIniFile("config.ini")
-                        .Build();
+            if (!File.Exists("config.ini"))
+                throw new FileNotFoundException("Не найден конфигурационный файл!");
+            FileIniDataParser parser = new FileIniDataParser();
 
-            IConfigurationSection section = config.GetSection("File");
-            IConfigurationSection address = config.GetSection("Address");
+            parser.ReadFile("config.ini");
 
-            Console.WriteLine("Ошибка");
+
             return true;
         }
     }

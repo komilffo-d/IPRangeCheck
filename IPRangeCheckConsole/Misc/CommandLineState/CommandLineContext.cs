@@ -13,10 +13,11 @@
         {
             Console.WriteLine("Состояние изменено!");
             _stateCLI = stateCLI;
+            _stateCLI.SetContext(this);
         }
 
 
-        public async Task ArgumentProcessAsync(string[]? args)
+        public async Task ArgumentProcessAsync(string[]? args = null)
         {
             await _stateCLI.ArgumentProcessAsync(args);
         }

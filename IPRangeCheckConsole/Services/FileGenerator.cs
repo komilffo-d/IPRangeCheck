@@ -38,7 +38,7 @@ namespace IPRangeCheckConsole.Services
         {
             _DateTimeGenerator = generator;
         }
-        public async Task WriteFileAsync(string pathFile,  int countEntries,  bool isInclusive)
+        public async Task WriteFileAsync(string pathFile, int countEntries, bool isInclusive)
         {
             if (_IPGenerator is null || _DateTimeGenerator is null)
                 throw new InvalidOperationException("Не назначены генераторы IP-адрессов и дат!");
