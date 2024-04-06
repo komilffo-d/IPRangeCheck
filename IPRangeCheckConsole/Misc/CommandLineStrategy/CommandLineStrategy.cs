@@ -1,6 +1,5 @@
 ﻿using CommandLine;
 using IPRangeCheckConsole.Interfaces;
-using Microsoft.Extensions.Configuration;
 using System.Globalization;
 
 namespace IPRangeCheckConsole.Misc.CommandLineState
@@ -18,7 +17,11 @@ namespace IPRangeCheckConsole.Misc.CommandLineState
         private protected override async Task<CLIOptions> GetParameters(string[]? args = null)
         {
 
-            Parser parser = new Parser(ps => ps.ParsingCulture = CultureInfo.DefaultThreadCurrentCulture);
+            Parser parser = new Parser(ps =>
+            {
+                ps.ParsingCulture = CultureInfo.DefaultThreadCurrentCulture;
+                ps.IgnoreUnknownArguments = true;
+            });
 
             CLIOptions CLIOptions = await parser.ParseArguments<CLIOptions>(args).MapResult(async (CLIOptions opts) =>
             {
@@ -30,7 +33,8 @@ namespace IPRangeCheckConsole.Misc.CommandLineState
                 return null;
             });
 
-            return CLIOptions;
+
+            return null;
         }
 
     }

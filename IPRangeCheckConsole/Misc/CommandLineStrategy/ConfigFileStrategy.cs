@@ -1,5 +1,6 @@
 ﻿using IPRangeCheckConsole.Interfaces;
 using Microsoft.Extensions.Configuration;
+using System.Net;
 
 namespace IPRangeCheckConsole.Misc.CommandLineState
 {
@@ -29,7 +30,7 @@ namespace IPRangeCheckConsole.Misc.CommandLineState
                 {
                     FileLog = fileConfiguration.Log,
                     FileOutput = fileConfiguration.Output,
-                    AddressStart=addressConfiguration.Start,
+                    AddressStart=  addressConfiguration.Start,
                     AddressMask=addressConfiguration.Mask,
                     TimeStart=timeConfiguration.Start,
                     TimeEnd=timeConfiguration.End

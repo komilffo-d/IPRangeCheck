@@ -26,6 +26,15 @@ namespace IPRangeGenerator.Services
                 result = -1;
 
         }
+        public static void InvertIPAddress(this IPAddress ipAddress, out IPAddress result)
+        {
+            byte[] addressBytes = ipAddress.GetAddressBytes();
+
+            for (int i = 0; i < addressBytes.Length; i++)
+                addressBytes[i] = (byte)~addressBytes[i];
+
+            result = new IPAddress(addressBytes);
+        }
 
     }
 }

@@ -1,6 +1,7 @@
 ﻿using IPRangeCheckConsole.Interfaces;
 using IPRangeCheckConsole.Misc.CommandLineState;
 using IPRangeCheckConsole.Services;
+using IPRangeGenerator;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,19 +18,14 @@ namespace IPRangeCheckConsole
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("ru-RU");
             try
             {
-                /*                FileGenerator.CreateEntity();
-                                FileGenerator? generator = FileGenerator.GetEntity();
-                                generator?.SetIPGenerator(new IPGenerator("192.168.0.9", "192.168.10.100"));
-                                generator?.SetDateTimeGenerator(new DateTimeGenerator("01.04.2001 06:08:20", "01.04.2001 06:15:20"));
-                                await generator?.WriteFileAsync(@"C:\Users\Daniil\Downloads\log.txt", 100000, true);*/
 
                 IHost host = CreateHostBuilder(args).Build();
 
                 List<ArgumentStrategy> listStrategy = new List<ArgumentStrategy>()
                 {
                     ActivatorUtilities.CreateInstance<CommandLineStrategy>(host.Services),
-                    ActivatorUtilities.CreateInstance<ConfigFileStrategy>(host.Services),
-                    ActivatorUtilities.CreateInstance<EnvironmentVariableStrategy>(host.Services)
+/*                    ActivatorUtilities.CreateInstance<ConfigFileStrategy>(host.Services),*/
+/*                    ActivatorUtilities.CreateInstance<EnvironmentVariableStrategy>(host.Services)*/
                 };
                 CommandLineContext CLIContext = new CommandLineContext();
 
@@ -44,7 +40,7 @@ namespace IPRangeCheckConsole
 
 
 
-               
+
 
 
 
@@ -56,12 +52,28 @@ namespace IPRangeCheckConsole
             }
             finally
             {
-                if(IsSuccess)
+                if (IsSuccess)
                     await Console.Out.WriteLineAsync("Работа приложения выполнена успешно!");
                 else
                     await Console.Out.WriteLineAsync("Приложение не выполнило своих обязанностех!");
+                Thread.Sleep(-1);
+            }
 
-                await Console.Out.WriteLineAsync("Удачного дня!");
+        }
+        public static async Task GenerateFileLog(string minIPAddress, string maxIPAddress, DateTime minDateTime, DateTime maxDateTime, int count = 100, bool isInclusive = true)
+        {
+            try
+            {
+                FileGenerator.CreateEntity();
+                FileGenerator? generator = FileGenerator.GetEntity();
+                generator?.SetIPGenerator(new IPGenerator(minIPAddress, maxIPAddress));
+                generator?.SetDateTimeGenerator(new DateTimeGenerator(minDateTime, maxDateTime));
+                await generator?.WriteFileAsync(@"C:\Users\Daniil\Downloads\log.txt", count, isInclusive);
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
 
         }

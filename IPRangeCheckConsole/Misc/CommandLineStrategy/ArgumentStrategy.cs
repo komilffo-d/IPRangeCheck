@@ -41,7 +41,7 @@ namespace IPRangeCheckConsole.Misc.CommandLineState
                     dictIpAddresses.Add(key.ToString(), 1);
             }
 
-            await _fileWriter.WriteAsync(options.FileOutput, dictIpAddresses.Select(t => $"{t.Key} Количество обращений: {t.Value}"));
+            await _fileWriter.WriteAsync(options.FileOutput, dictIpAddresses.Select(t => $"{t.Key} Count: {t.Value}"));
 
             return true;
         }

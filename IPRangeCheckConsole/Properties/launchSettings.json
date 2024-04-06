@@ -2,7 +2,7 @@
   "profiles": {
     "IPRangeCheckConsole": {
       "commandName": "Project",
-      "commandLineArgs": "--file-log \"C:\\Users\\Daniil\\Downloads\\log.txt\" --file-output --address-start \"192.168.0.1\" --address-mask  \"255.255.255.192\" --time-start 01.04.2001 --time-end 05.04.2001",
+      "commandLineArgs": "--file-log \"C:\\Users\\Daniil\\Downloads\\log.txt\" --file-output \"C:\\Users\\Daniil\\Downloads\\output.txt\" --address-start \"1942.1268.0.1\" --address-mask  \"255.255.255.192\" --time-start 01.04.2001 --time-end 05.04.2001",
       "environmentVariables": {
         "FILE_LOG": "C:\\Users\\Daniil\\Downloads\\log.txt",
         "FILE_OUTPUT": "C:\\Users\\Daniil\\Downloads\\output.txt",
