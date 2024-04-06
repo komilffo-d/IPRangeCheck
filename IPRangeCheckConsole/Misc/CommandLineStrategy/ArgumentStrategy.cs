@@ -1,4 +1,5 @@
-﻿using IPRangeCheckConsole.Interfaces;
+﻿using FluentValidation;
+using IPRangeCheckConsole.Interfaces;
 using NetTools;
 using System.Net;
 
@@ -9,7 +10,7 @@ namespace IPRangeCheckConsole.Misc.CommandLineState
     {
         private protected  IFileWriter _fileWriter;
         private protected  IFileReader _fileReader;
-
+        private protected IValidator<CLIOptions> _validator;
 
         private protected ArgumentStrategy()
         {

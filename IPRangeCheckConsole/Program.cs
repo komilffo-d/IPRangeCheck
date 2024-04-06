@@ -1,6 +1,9 @@
-﻿using IPRangeCheckConsole.Interfaces;
+﻿using FluentValidation;
+using IPRangeCheckConsole.Interfaces;
+using IPRangeCheckConsole.Misc;
 using IPRangeCheckConsole.Misc.CommandLineState;
 using IPRangeCheckConsole.Services;
+using IPRangeCheckConsole.Validators;
 using IPRangeGenerator;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -87,7 +90,8 @@ namespace IPRangeCheckConsole
             }).ConfigureServices((app, services) =>
             {
                 services.AddScoped<IFileReader, FileService>()
-                        .AddScoped<IFileWriter, FileService>();
+                        .AddScoped<IFileWriter, FileService>()
+                        .AddScoped<IValidator<CLIOptions>, CLIOptionsValidator>();
             });
         }
 
