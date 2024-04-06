@@ -24,24 +24,25 @@ namespace IPRangeCheckConsole
 
                 IHost host = CreateHostBuilder(args).Build();
 
-                List<ArgumentState> linkedList = new List<ArgumentState>()
+                List<ArgumentState> listState = new List<ArgumentState>()
                 {
                     ActivatorUtilities.CreateInstance<CommandLineState>(host.Services),
                     ActivatorUtilities.CreateInstance<ConfigFileState>(host.Services),
                     ActivatorUtilities.CreateInstance<EnvironmentVariableState>(host.Services)
                 };
+                CommandLineContext CLIContext = new CommandLineContext(listState.First());
+                foreach (ArgumentState item in listState)
+                {
+
+                    CLIContext.SwitchToState(item);
+                }
 
 
 
-/*                CommandLineContext CLIContext = new CommandLineContext(CLIState);
+
                 IsSuccess = await CLIContext.ArgumentProcessAsync(args);
-                if (!IsSuccess)
-                    CLIState = ;
-                IsSuccess = await CLIContext.ArgumentProcessAsync(args);
 
-                if (!IsSuccess)
-                    CLIState = ;
-                IsSuccess = await CLIContext.ArgumentProcessAsync(args);*/
+
 
             }
             catch (Exception exception)
