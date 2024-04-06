@@ -4,21 +4,16 @@ using System.Net;
 
 namespace IPRangeCheckConsole.Misc.CommandLineState
 {
-    //Паттерн "Состояние"
-    public abstract class ArgumentState
+    //Паттерн "Стратегия"
+    public abstract class ArgumentStrategy
     {
         private protected  IFileWriter _fileWriter;
         private protected  IFileReader _fileReader;
 
-        private protected CommandLineContext _context;
 
-        private protected ArgumentState()
+        private protected ArgumentStrategy()
         {
 
-        }
-        public void SetContext(CommandLineContext context)
-        {
-            _context = context;
         }
 
         //Паттерн "Шаблонный метод"

@@ -11,6 +11,7 @@ namespace IPRangeCheckConsole
     internal sealed class Program
     {
         private static bool IsSuccess { get; set; } = false;
+
         static async Task Main(string[] args)
         {
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("ru-RU");
@@ -24,23 +25,26 @@ namespace IPRangeCheckConsole
 
                 IHost host = CreateHostBuilder(args).Build();
 
-                List<ArgumentState> listState = new List<ArgumentState>()
+                List<ArgumentStrategy> listStrategy = new List<ArgumentStrategy>()
                 {
-                    ActivatorUtilities.CreateInstance<CommandLineState>(host.Services),
-                    ActivatorUtilities.CreateInstance<ConfigFileState>(host.Services),
-                    ActivatorUtilities.CreateInstance<EnvironmentVariableState>(host.Services)
+                    ActivatorUtilities.CreateInstance<CommandLineStrategy>(host.Services),
+                    ActivatorUtilities.CreateInstance<ConfigFileStrategy>(host.Services),
+                    ActivatorUtilities.CreateInstance<EnvironmentVariableStrategy>(host.Services)
                 };
-                CommandLineContext CLIContext = new CommandLineContext(listState.First());
-                foreach (ArgumentState item in listState)
-                {
+                CommandLineContext CLIContext = new CommandLineContext();
 
-                    CLIContext.SwitchToState(item);
+                foreach (ArgumentStrategy item in listStrategy)
+                {
+                    CLIContext.SwitchToStrategy(item);
+                    IsSuccess = await CLIContext.ArgumentProcessAsync(args);
+                    if (IsSuccess)
+                        break;
                 }
 
 
 
 
-                IsSuccess = await CLIContext.ArgumentProcessAsync(args);
+               
 
 
 
@@ -52,6 +56,11 @@ namespace IPRangeCheckConsole
             }
             finally
             {
+                if(IsSuccess)
+                    await Console.Out.WriteLineAsync("Работа приложения выполнена успешно!");
+                else
+                    await Console.Out.WriteLineAsync("Приложение не выполнило своих обязанностех!");
+
                 await Console.Out.WriteLineAsync("Удачного дня!");
             }
 
