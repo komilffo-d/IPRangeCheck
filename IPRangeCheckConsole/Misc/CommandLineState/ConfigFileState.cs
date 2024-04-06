@@ -1,12 +1,19 @@
 ﻿using IniParser;
 using IniParser.Parser;
+using IPRangeCheckConsole.Interfaces;
 using Microsoft.Extensions.Configuration;
 
 namespace IPRangeCheckConsole.Misc.CommandLineState
 {
-    public class ConfigFileState : ArgumentState
+    internal class ConfigFileState : ArgumentState
     {
-        public override async Task<bool> ArgumentProcessAsync(string[]? args = null)
+        public ConfigFileState(IFileWriter fileWriter, IFileReader fileReader) : base()
+        {
+            _fileWriter = fileWriter;
+            _fileReader = fileReader;
+        }
+
+        private protected override Task<CLIOptions> GetParameters(string[]? args = null)
         {
             if (!File.Exists("config.ini"))
                 throw new FileNotFoundException("Не найден конфигурационный файл!");
@@ -15,7 +22,7 @@ namespace IPRangeCheckConsole.Misc.CommandLineState
             parser.ReadFile("config.ini");
 
 
-            return true;
+            return null!;
         }
     }
 }

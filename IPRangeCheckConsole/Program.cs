@@ -1,8 +1,6 @@
-﻿using CommandLine;
-using IPRangeCheckConsole.Interfaces;
+﻿using IPRangeCheckConsole.Interfaces;
 using IPRangeCheckConsole.Misc.CommandLineState;
 using IPRangeCheckConsole.Services;
-using IPRangeGenerator;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -12,6 +10,7 @@ namespace IPRangeCheckConsole
 {
     internal sealed class Program
     {
+        private static bool IsSuccess { get; set; } = false;
         static async Task Main(string[] args)
         {
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("ru-RU");
@@ -24,15 +23,31 @@ namespace IPRangeCheckConsole
                                 await generator?.WriteFileAsync(@"C:\Users\Daniil\Downloads\log.txt", 100000, true);*/
 
                 IHost host = CreateHostBuilder(args).Build();
-                CommandLineState commandLineState = ActivatorUtilities.CreateInstance<CommandLineState>(host.Services);
-                CommandLineContext CLIContext = new CommandLineContext(commandLineState);
-                await CLIContext.ArgumentProcessAsync(args);
+
+                List<ArgumentState> linkedList = new List<ArgumentState>()
+                {
+                    ActivatorUtilities.CreateInstance<CommandLineState>(host.Services),
+                    ActivatorUtilities.CreateInstance<ConfigFileState>(host.Services),
+                    ActivatorUtilities.CreateInstance<EnvironmentVariableState>(host.Services)
+                };
+
+
+
+/*                CommandLineContext CLIContext = new CommandLineContext(CLIState);
+                IsSuccess = await CLIContext.ArgumentProcessAsync(args);
+                if (!IsSuccess)
+                    CLIState = ;
+                IsSuccess = await CLIContext.ArgumentProcessAsync(args);
+
+                if (!IsSuccess)
+                    CLIState = ;
+                IsSuccess = await CLIContext.ArgumentProcessAsync(args);*/
 
             }
             catch (Exception exception)
             {
                 await Console.Out.WriteLineAsync(exception.ToString()).ContinueWith(async (task) => await Console.Out.WriteLineAsync("Сочувствуем,что произошла ошибка!"), TaskContinuationOptions.ExecuteSynchronously);
-                
+
             }
             finally
             {
@@ -50,7 +65,7 @@ namespace IPRangeCheckConsole
             }).ConfigureServices((app, services) =>
             {
                 services.AddScoped<IFileReader, FileService>()
-                        .AddSingleton<IFileWriter, FileService>();
+                        .AddScoped<IFileWriter, FileService>();
             });
         }
 

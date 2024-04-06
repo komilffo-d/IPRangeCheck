@@ -1,5 +1,6 @@
 ﻿namespace IPRangeCheckConsole.Misc.CommandLineState
 {
+    //Паттерн "Состяние"
     public class CommandLineContext
     {
         private ArgumentState _stateCLI;
@@ -16,10 +17,10 @@
             _stateCLI.SetContext(this);
         }
 
-
-        public async Task ArgumentProcessAsync(string[]? args = null)
+        //Возвращаю именно return await, а не просто return Task<T>, чтобы было перехвачено исключение в блоке try/catch.
+        public async Task<bool> ArgumentProcessAsync(string[]? args = null)
         {
-            await _stateCLI.ArgumentProcessAsync(args);
+            return await _stateCLI.ArgumentProcessAsync(args);
         }
     }
 }

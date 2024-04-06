@@ -4,6 +4,9 @@ using System.Net;
 
 namespace IPRangeCheckConsole.Services
 {
+    /// <summary>
+    /// Да, это Singleton((
+    /// </summary>
     internal sealed class FileGenerator
     {
         private FileGenerator() { }
