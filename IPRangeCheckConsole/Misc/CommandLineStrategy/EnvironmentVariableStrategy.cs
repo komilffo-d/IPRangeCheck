@@ -62,8 +62,8 @@ namespace IPRangeCheckConsole.Misc.CommandLineState
                 FileOutput = CLIOptions.FileOutput ?? envFileOutput,
                 AddressStart = CLIOptions.AddressStart ?? (IPAddress.TryParse(envAddressStart, out IPAddress startIPAddress) ? startIPAddress.ToString() : null!),
                 AddressMask = CLIOptions.AddressMask ?? (IPAddress.TryParse(envAddressMask, out IPAddress maskIPAddress) ? maskIPAddress.ToString() : null!),
-                TimeStart = CLIOptions.TimeStart ?? (DateOnly.TryParseExact(envTimeStart, "dd.M.yyyy", null, DateTimeStyles.None, out DateOnly tempMinDateTime) ? tempMinDateTime: null!),
-                TimeEnd = CLIOptions.TimeEnd ?? (DateOnly.TryParseExact(envTimeEnd, "dd.M.yyyy", null, DateTimeStyles.None, out DateOnly tempMaxDateTime) ? tempMaxDateTime :null!),
+                TimeStart = CLIOptions.TimeStart ?? envTimeStart,
+                TimeEnd = CLIOptions.TimeEnd ?? envTimeEnd,
             };
 
         }

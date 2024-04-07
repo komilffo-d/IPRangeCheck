@@ -42,7 +42,7 @@ namespace IPRangeCheckConsole.Misc.CommandLineState
 
                 if (dictIpAddresses.ContainsKey(key.ToString()))
                     dictIpAddresses[key.ToString()]++;
-                else if (dateTime < options.TimeEnd && dateTime >= options.TimeStart && rangeIP.Contains(IPAddress.Parse(ipAddress)))
+                else if (true && rangeIP.Contains(IPAddress.Parse(ipAddress)))
                     dictIpAddresses.Add(key.ToString(), 1);
             }
 

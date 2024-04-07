@@ -40,7 +40,7 @@ namespace IPRangeCheckConsole.Validators
 
         }
 
-        public static IRuleBuilderOptions<T, DateOnly?> ValidateDateTime<T>(this IRuleBuilder<T, DateOnly?> ruleBuilder)
+        public static IRuleBuilderOptions<T, string?> ValidateDateTime<T>(this IRuleBuilder<T, string?> ruleBuilder)
         {
             return ruleBuilder
                        .Must(val =>

@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Globalization;
 
 namespace IPRangeCheckWinForms
 {
@@ -15,10 +16,10 @@ namespace IPRangeCheckWinForms
             {
                 string appPath = textBox1.Text;
                 string appConf = textBox2.Text;
-                ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = appPath };
+                ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = appPath, Arguments= "--file-log \"C:\\Users\\Daniil\\Downloads\\log.txt\" --file-output \"C:\\Users\\Daniil\\Downloads\\output.txt\" --address-start 192.168.0.7 --address-mask 255.255.255.0 --time-start 29.03.2001 --time-end 01.01.2024" };
 
 
-                if (radioButton1.Checked)
+                if (radioButton1.Checked && appConf.Length > 0)
                 {
                     File.Copy(appConf, $@"{Directory.GetCurrentDirectory()}\appsettings.json", overwrite: true);
                 }

@@ -8,6 +8,8 @@ using IPRangeGenerator;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NJsonSchema;
+using NJsonSchema.Generation;
 using System.Globalization;
 
 namespace IPRangeCheckConsole
@@ -18,13 +20,14 @@ namespace IPRangeCheckConsole
 
         static async Task Main(string[] args)
         {
-            
+
 
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("ru-RU");
             ValidatorOptions.Global.LanguageManager.Culture = CultureInfo.DefaultThreadCurrentCulture;
+
             try
             {
-                await GenerateFileLog("192.168.0.0", "192.168.0.10", new DateTime(2001, 3, 1), new DateTime(2001, 3, 30), 10000);
+/*                await GenerateFileLog("192.168.0.0", "192.168.0.10", new DateTime(2001, 3, 1), new DateTime(2001, 3, 30), 10000);*/
                 IHost host = CreateHostBuilder(args).Build();
 
                 List<ArgumentStrategy> listStrategy = new List<ArgumentStrategy>()
@@ -85,13 +88,27 @@ namespace IPRangeCheckConsole
         }
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            return Host.CreateDefaultBuilder(args).ConfigureAppConfiguration((app, configuration) =>
+            return Host.CreateDefaultBuilder(args).ConfigureAppConfiguration(async (app, configuration) =>
             {
                 configuration.Sources.Clear();
-                configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+                if (File.Exists("appsettings.json"))
+                {
+                    JsonSchema jsonSchema = JsonSchema.FromType<CLIOptionsSchema>();
+                    
+                    var str = jsonSchema.ToJson();
+                    string? json = await File.ReadAllTextAsync("appsettings.Json");
+                    
+                    var errors = jsonSchema.Validate(json);
+                    
+                    if (errors.Count ==0)
+                        configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                }
+                    
 
             }).ConfigureServices((app, services) =>
             {
+                
                 services.AddScoped<IFileReader, FileService>()
                         .AddScoped<IFileWriter, FileService>()
                         .AddScoped<IValidator<CLIOptions>, CLIOptionsValidator>();

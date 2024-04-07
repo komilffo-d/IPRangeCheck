@@ -26,7 +26,7 @@ namespace IPRangeCheckConsole.Misc.CommandLineState
             });
 
             CLIOptions? CLIOptions =  parser.ParseArguments<CLIOptions>(args).MapResult(opts => opts, err => null);
-            
+           
             try
             {
 
@@ -70,7 +70,7 @@ namespace IPRangeCheckConsole.Misc.CommandLineState
 
     file sealed class Time
     {
-        public DateOnly? Start { get; set; }
-        public DateOnly? End { get; set; }
+        public string Start { get; set; }
+        public string End { get; set; }
     }
 }
