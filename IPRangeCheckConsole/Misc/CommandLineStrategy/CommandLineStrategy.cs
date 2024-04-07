@@ -25,16 +25,7 @@ namespace IPRangeCheckConsole.Misc.CommandLineState
                 ps.IgnoreUnknownArguments = true;
             });
 
-            CLIOptions? CLIOptions = await parser.ParseArguments<CLIOptions>(args).MapResult(async (CLIOptions opts) =>
-            {
-                ValidationResult result = await _validator.ValidateAsync(opts);
-                if (result.IsValid)
-                    return opts;
-                return null;
-            }, err =>
-            {
-                return null;
-            });
+            CLIOptions? CLIOptions = parser.ParseArguments<CLIOptions>(args).MapResult(opts => opts, err => null);
 
 
             return CLIOptions!;

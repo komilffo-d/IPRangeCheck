@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using System.Globalization;
 using System.Net;
 
 namespace IPRangeCheckConsole.Validators
@@ -26,12 +25,14 @@ namespace IPRangeCheckConsole.Validators
 
         }
 
-        public static IRuleBuilderOptions<T, DateTime?> ValidateDateTime<T>(this IRuleBuilder<T, DateTime?> ruleBuilder)
+        public static IRuleBuilderOptions<T, DateOnly?> ValidateDateTime<T>(this IRuleBuilder<T, DateOnly?> ruleBuilder)
         {
             return ruleBuilder
                        .Must(val =>
                        {
-                           return DateTime.TryParseExact(val.ToString(), "d.M.yyyy", null, DateTimeStyles.None, out DateTime dateTime);
+                           var key = DateOnly.TryParseExact(val?.ToString(), "d.M.yyyy", out DateOnly dateOnly);
+
+                           return key;
                        }).WithMessage("У свойства {PropertyName} неправильно задана дата или её формат.");
 
         }

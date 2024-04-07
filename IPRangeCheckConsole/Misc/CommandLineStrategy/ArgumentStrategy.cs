@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using FluentValidation.Results;
 using IPRangeCheckConsole.Interfaces;
 using NetTools;
 using System.Net;
@@ -21,18 +22,19 @@ namespace IPRangeCheckConsole.Misc.CommandLineState
         public async Task<bool> ArgumentProcessAsync(string[]? args = null)
         {
             CLIOptions options = await GetParameters(args);
-            if (options is null)
+            ValidationResult result = await _validator.ValidateAsync(options);
+            if (!result.IsValid)
                 return false;
             Dictionary<string, int> dictIpAddresses = new Dictionary<string, int>();
 
-            IPAddressRange rangeIP = IPAddressRange.Parse($"{options.AddressStart}/{options.AddressMask}");
+            IPAddressRange rangeIP = IPAddressRange.Parse($"{options.AddressStart ?? "0.0.0.0"}/{options.AddressMask ?? "0.0.0.0"}");
             string? key = null;
 
             await foreach (string IP in _fileReader.ReadAsync(options.FileLog))
             {
                 string[] lineData = IP.Split('|');
                 string? ipAddress = lineData.FirstOrDefault();
-                DateTime dateTime = DateTime.Parse(lineData.LastOrDefault());
+                DateOnly dateTime = DateOnly.FromDateTime(DateTime.Parse(lineData.LastOrDefault()));
                 key = $"{ipAddress} {dateTime.ToString("dd.MM.yyyy")}";
 
 
