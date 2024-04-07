@@ -7,9 +7,11 @@ namespace IPRangeCheckConsole.Validators
     {
         public CLIOptionsValidator()
         {
-            RuleFor(opts => opts.FileLog).NotEmpty().ValidateFilePathAddress().NotEqual(opts => opts.FileOutput);
+            RuleLevelCascadeMode = CascadeMode.Stop;
 
-            RuleFor(opts => opts.FileOutput).NotEmpty().ValidateFilePathAddress().NotEqual(opts => opts.FileLog);
+            RuleFor(opts => opts.FileLog).NotEmpty().ValidateFilePath().NotEqual(opts => opts.FileOutput);
+
+            RuleFor(opts => opts.FileOutput).NotEmpty().ValidateDirectoryPath().NotEqual(opts => opts.FileLog);
 
             RuleFor(opts => opts.AddressStart).ValidateIPAddress().When(opts => !string.IsNullOrEmpty(opts.AddressStart));
 

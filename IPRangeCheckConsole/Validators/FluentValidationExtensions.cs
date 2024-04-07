@@ -11,17 +11,32 @@ namespace IPRangeCheckConsole.Validators
                        .Must(val => IPAddress.TryParse(val, out _)).WithMessage("У свойства {PropertyName} неправильно задан IP-Address.");
         }
 
-        public static IRuleBuilderOptions<T, string> ValidateFilePathAddress<T>(this IRuleBuilder<T, string> ruleBuilder)
+        public static IRuleBuilderOptions<T, string> ValidateFilePath<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
             return ruleBuilder
                        .Must(val =>
                        {
+                       
                            FileInfo fileInfo = new FileInfo(val);
 
                            if (!fileInfo.Exists)
                                return false;
                            return true;
                        }).WithMessage("У свойства {PropertyName} неправильно задан путь к файлу.");
+
+        }
+
+        public static IRuleBuilderOptions<T, string> ValidateDirectoryPath<T>(this IRuleBuilder<T, string> ruleBuilder)
+        {
+            return ruleBuilder
+                       .Must(val =>
+                       {
+                           if (Path.IsPathFullyQualified(val) && !Path.GetInvalidPathChars().Any(val.Contains) && Directory.Exists(Path.GetDirectoryName(val)))
+                           {
+                               return true;
+                           }
+                           return false;
+                       }).WithMessage("У свойства {PropertyName} неправильно задан путь к директории.");
 
         }
 

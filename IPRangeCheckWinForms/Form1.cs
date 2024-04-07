@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Windows.Forms;
 
 namespace IPRangeCheckWinForms
 {
@@ -12,6 +11,38 @@ namespace IPRangeCheckWinForms
 
         private void button1_Click(object sender, EventArgs e)
         {
+            try
+            {
+                string appPath = textBox1.Text;
+                string appConf = textBox2.Text;
+                ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = appPath };
+
+
+                if (radioButton1.Checked)
+                {
+                    File.Copy(appConf, $@"{Directory.GetCurrentDirectory()}\appsettings.json", overwrite: true);
+                }
+                else if (radioButton2.Checked)
+                {
+                    foreach (DataGridViewRow row in dataGridView2.Rows)
+                    {
+                        string key = row.Cells[0].Value?.ToString();
+                        string value = row.Cells[1].Value?.ToString();
+                        if (!string.IsNullOrEmpty(key))
+                        {
+                            startInfo.Environment[key] = value ?? string.Empty;
+                        }
+                    }
+                }
+                Process process = new Process();
+                process.StartInfo = startInfo;
+                process.Start();
+            }
+            catch (Exception)
+            {
+
+                MessageBox.Show("Неверные входные данные", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
         }
 
@@ -29,6 +60,8 @@ namespace IPRangeCheckWinForms
                 {
 
                     textBox1.Text = openFileDialog1.FileName;
+                    dataGridView1.Enabled = true;
+                    button1.Enabled = true;
                 }
             }
         }

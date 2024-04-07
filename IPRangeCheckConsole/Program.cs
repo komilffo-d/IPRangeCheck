@@ -19,6 +19,7 @@ namespace IPRangeCheckConsole
         static async Task Main(string[] args)
         {
 
+
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("ru-RU");
             ValidatorOptions.Global.LanguageManager.Culture = CultureInfo.DefaultThreadCurrentCulture;
             try
@@ -28,9 +29,9 @@ namespace IPRangeCheckConsole
 
                 List<ArgumentStrategy> listStrategy = new List<ArgumentStrategy>()
                 {
-                    ActivatorUtilities.CreateInstance<CommandLineStrategy>(host.Services),
+/*                    ActivatorUtilities.CreateInstance<CommandLineStrategy>(host.Services),*/
                     ActivatorUtilities.CreateInstance<ConfigFileStrategy>(host.Services),
-                    ActivatorUtilities.CreateInstance<EnvironmentVariableStrategy>(host.Services)
+/*                    ActivatorUtilities.CreateInstance<EnvironmentVariableStrategy>(host.Services)*/
                 };
                 CommandLineContext CLIContext = new CommandLineContext();
 

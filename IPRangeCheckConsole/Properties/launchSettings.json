@@ -1,14 +1,7 @@
 {
   "profiles": {
     "IPRangeCheckConsole": {
-      "commandName": "Project",
-      "commandLineArgs": "--file-log \"C:\\Users\\Daniil\\Downloads\\log.txt\" --file-output \"C:\\Users\\Daniil\\Downloads\\output.txt\" --time-end 05.04.2001",
-      "environmentVariables": {
-        "FILE_LOG": "C:\\Users\\Daniil\\Downloads\\log.txt",
-        "FILE_OUTPUT": "C:\\Users\\Daniil\\Downloads\\output.txt",
-        "TIME_START": "01.04.2001",
-        "TIME_END": "05.04.2001"
-      }
+      "commandName": "Project"
     }
   }
 }
