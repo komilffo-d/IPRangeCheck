@@ -22,6 +22,8 @@ namespace IPRangeCheckConsole.Misc.CommandLineState
         public async Task<bool> ArgumentProcessAsync(string[]? args = null)
         {
             CLIOptions options = await GetParameters(args);
+            if (options is null)
+                return false;
             ValidationResult result = await _validator.ValidateAsync(options);
             if (!result.IsValid)
                 return false;

@@ -18,20 +18,20 @@ namespace IPRangeCheckConsole
 
         static async Task Main(string[] args)
         {
-
+            
 
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("ru-RU");
             ValidatorOptions.Global.LanguageManager.Culture = CultureInfo.DefaultThreadCurrentCulture;
             try
             {
-                await GenerateFileLog("192.168.0.0", "192.168.0.10", new DateTime(2001, 3, 25), new DateTime(2001, 3, 30), 10000);
+                await GenerateFileLog("192.168.0.0", "192.168.0.10", new DateTime(2001, 3, 1), new DateTime(2001, 3, 30), 10000);
                 IHost host = CreateHostBuilder(args).Build();
 
                 List<ArgumentStrategy> listStrategy = new List<ArgumentStrategy>()
                 {
-/*                    ActivatorUtilities.CreateInstance<CommandLineStrategy>(host.Services),*/
+                    ActivatorUtilities.CreateInstance<CommandLineStrategy>(host.Services),
                     ActivatorUtilities.CreateInstance<ConfigFileStrategy>(host.Services),
-/*                    ActivatorUtilities.CreateInstance<EnvironmentVariableStrategy>(host.Services)*/
+                    ActivatorUtilities.CreateInstance<EnvironmentVariableStrategy>(host.Services)
                 };
                 CommandLineContext CLIContext = new CommandLineContext();
 
