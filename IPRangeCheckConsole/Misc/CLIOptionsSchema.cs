@@ -20,27 +20,27 @@ namespace IPRangeCheckConsole.Misc
         public class File
         {
             [Required]
-            public string log { get; set; }
+            public string Log { get; set; }
 
             [Required]
-            public string output { get; set; }
+            public string Output { get; set; }
         }
         public class Address
         {
             [Required]
-            public string start { get; set; }
+            public string Start { get; set; }
 
             [Required]
-            public string mask { get; set; }
+            public string Mask { get; set; }
         }
 
         public class Time
         {
             [Required]
-            public string start { get; set; }
+            public string Start { get; set; }
 
             [Required]
-            public string end { get; set; }
+            public string End { get; set; }
         }
 
     }

@@ -2,6 +2,7 @@
 using FluentValidation.Results;
 using IPRangeCheckConsole.Interfaces;
 using NetTools;
+using Serilog;
 using System.Net;
 
 namespace IPRangeCheckConsole.Misc.CommandLineState
@@ -21,6 +22,7 @@ namespace IPRangeCheckConsole.Misc.CommandLineState
         //Паттерн "Шаблонный метод"
         public async Task<bool> ArgumentProcessAsync(string[]? args = null)
         {
+
             CLIOptions options = await GetParameters(args);
             if (options is null)
                 return false;
@@ -29,7 +31,7 @@ namespace IPRangeCheckConsole.Misc.CommandLineState
                 return false;
             Dictionary<string, int> dictIpAddresses = new Dictionary<string, int>();
 
-            IPAddressRange rangeIP = IPAddressRange.Parse($"{options.AddressStart ?? "0.0.0.0"}/{options.AddressMask ?? "0.0.0.0"}");
+            IPAddressRange rangeIP = IPAddressRange.Parse($"{options.AddressStart}/{options.AddressMask}");
             string? key = null;
 
             await foreach (string IP in _fileReader.ReadAsync(options.FileLog))

@@ -2,6 +2,7 @@
 using FluentValidation;
 using IPRangeCheckConsole.Interfaces;
 using Microsoft.Extensions.Configuration;
+using Serilog;
 using System.Globalization;
 
 namespace IPRangeCheckConsole.Misc.CommandLineState
@@ -25,52 +26,40 @@ namespace IPRangeCheckConsole.Misc.CommandLineState
                 ps.IgnoreUnknownArguments = true;
             });
 
-            CLIOptions? CLIOptions =  parser.ParseArguments<CLIOptions>(args).MapResult(opts => opts, err => null);
-           
-            try
-            {
+            CLIOptions? CLIOptions = parser.ParseArguments<CLIOptions>(args).MapResult(opts => opts, err => null);
 
-                File fileConfiguration = new File();
-                _configuration?.GetSection("file")?.Bind(fileConfiguration);
-                Address addressConfiguration = new Address();
-                _configuration?.GetSection("address")?.Bind(addressConfiguration);
-                Time timeConfiguration = new Time();
-                _configuration?.GetSection("time")?.Bind(timeConfiguration);
-
-                return new CLIOptions()
-                {
-                    FileLog = CLIOptions.FileLog ?? fileConfiguration.Log,
-                    FileOutput = CLIOptions.FileOutput ?? fileConfiguration.Output,
-                    AddressStart = CLIOptions.AddressStart ?? addressConfiguration.Start,
-                    AddressMask = CLIOptions.AddressMask ?? addressConfiguration.Mask,
-                    TimeStart = CLIOptions.TimeStart ?? timeConfiguration.Start,
-                    TimeEnd = CLIOptions.TimeEnd ?? timeConfiguration.End
-                };
-            }
-            catch
+            if (!_configuration.GetChildren().Any())
             {
-                return null;
+                Log.Warning("Попытка получить данные из конфигурационного файла не успешна!");
+                return null!;
             }
+
+
+
+            CLIOptionsSchema.File fileSection = new CLIOptionsSchema.File();
+            _configuration.GetSection(nameof(CLIOptionsSchema.File)).Bind(fileSection);
+
+            CLIOptionsSchema.Address addressSection = new CLIOptionsSchema.Address();
+            _configuration.GetSection(nameof(CLIOptionsSchema.Address))?.Bind(addressSection);
+
+            CLIOptionsSchema.Time timeSection = new CLIOptionsSchema.Time();
+            _configuration.GetSection(nameof(CLIOptionsSchema.Time))?.Bind(timeSection);
+            Log.Warning("Попытка получить данные из конфигурационного файла успешна!");
+            return new CLIOptions()
+            {
+                FileLog = CLIOptions.FileLog ?? fileSection.Log,
+                FileOutput = CLIOptions.FileOutput ?? fileSection.Output,
+                AddressStart = CLIOptions.AddressStart ?? addressSection.Start,
+                AddressMask = CLIOptions.AddressMask ?? addressSection.Mask,
+                TimeStart = CLIOptions.TimeStart ?? timeSection.Start,
+                TimeEnd = CLIOptions.TimeEnd ?? timeSection.End
+            };
+
+
         }
 
 
     }
 
-    file sealed class File
-    {
-        public string Log { get; set; }
-        public string Output { get; set; }
-    }
 
-    file sealed class Address
-    {
-        public string Start { get; set; }
-        public string Mask { get; set; }
-    }
-
-    file sealed class Time
-    {
-        public string Start { get; set; }
-        public string End { get; set; }
-    }
 }

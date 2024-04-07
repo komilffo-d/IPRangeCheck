@@ -209,6 +209,7 @@
             Controls.Add(dataGridView1);
             Controls.Add(textBox1);
             Controls.Add(button1);
+            FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Name = "Main";
             Text = "Запуск консольного приложения";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
