@@ -1,6 +1,6 @@
 ﻿namespace IPRangeCheckWinForms
 {
-    partial class Form1
+    partial class Main
     {
         /// <summary>
         ///  Required designer variable.
@@ -197,7 +197,7 @@
             // 
             toolTip1.Tag = "";
             // 
-            // Form1
+            // Main
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -209,7 +209,7 @@
             Controls.Add(dataGridView1);
             Controls.Add(textBox1);
             Controls.Add(button1);
-            Name = "Form1";
+            Name = "Main";
             Text = "Запуск консольного приложения";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             groupBox1.ResumeLayout(false);
