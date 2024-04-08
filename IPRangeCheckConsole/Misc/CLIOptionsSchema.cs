@@ -10,12 +10,12 @@ namespace IPRangeCheckConsole.Misc
     public sealed class CLIOptionsSchema
     {
         [Required]
-        public File file { get; set; }
+        public File JSON_FILE { get; set; }
 
-        public Address address { get; set; }
+        public Address JSON_ADDRESS { get; set; }
 
         [Required]
-        public Time time { get; set; }
+        public Time JSON_TIME { get; set; }
 
         public class File
         {
