@@ -6,8 +6,10 @@ using IPRangeCheckConsole.Validators;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NetTools;
 using Serilog;
 using System.Globalization;
+using System.Net;
 
 
 namespace IPRangeCheckConsole
@@ -16,50 +18,33 @@ namespace IPRangeCheckConsole
     {
         private static bool IsSuccess { get; set; } = false;
 
-        private static void NullProperty(CLIOptions options, List<string> errorsList)
-        {
-            foreach (var error in errorsList)
-            {
-                switch (error)
-                {
-                    case "FileLog":
-                        options.FileLog = null;
-                        break;
-                    case "FileOutput":
-                        options.FileOutput = null;
-                        break;
-                    case "AddressStart":
-                        options.AddressStart = null;
-                        break;
-                    case "AddressMask":
-                        options.AddressMask = null;
-                        break;
-                    case "TimeStart":
-                        options.TimeStart = null;
-                        break;
-                    case "TimeEnd":
-                        options.TimeEnd = null;
-                        break;
-                    default:
-                        break;
-                }
-            }
-            errorsList.Clear();
-
-        }
         static async Task Main(string[] args)
         {
             Startup.Initialize();
             /*  await Startup.GenerateFileLog("C:\\Users\\Daniil\\Downloads\\", new IPGenerator("192.168.0.0", "192.168.0.10"), new DateTimeGenerator(new DateTime(2001, 3, 1), new DateTime(2001, 3, 30)), 10000);*/
+            IHost host = null;
+            try
+            {
+                host = CreateHostBuilder(args).Build();
+            }
+            catch (FormatException ex)
+            {
+                Log.Fatal("Неправильно сформированный JSON или INI файл.");
+            }
+
             try
             {
 
                 Log.Information("Начато формирование хоста.");
-                IHost host = CreateHostBuilder(args).Build();
+
+
                 Log.Information("Хост собран.");
 
 
                 var conf = host.Services.GetService<IConfiguration>();
+
+                var _fileReader = host.Services.GetService<IFileReader>();
+                var _fileWriter = host.Services.GetService<IFileWriter>();
 
                 CLIOptionsValidator _validator = new CLIOptionsValidator();
                 CLIOptions cliOptions = new CLIOptions()
@@ -72,35 +57,38 @@ namespace IPRangeCheckConsole
                     TimeEnd = DateOnly.TryParseExact(conf["TIME_END"], "dd.MM.yyyy", null, DateTimeStyles.None, out DateOnly timeEnd) ? timeEnd : null,
                 };
                 var result = _validator.Validate(cliOptions);
-                if (result.Errors.Count > 0)
+                IsSuccess = !(result.Errors.Count > 0);
+                if (!IsSuccess)
+                {
                     Log.Error("Переданы не все аргументы или переданы в неверном формате:");
-                foreach (var error in result.Errors)
-                    Log.Error($"--> {error.ErrorMessage} <--");
+
+                    foreach (var error in result.Errors)
+                        Log.Error($"--> {error.ErrorMessage} <--");
+                }
+                else
+                {
+                    Dictionary<string, int> dictIpAddresses = new Dictionary<string, int>();
+
+                    IPAddressRange rangeIP = IPAddressRange.Parse($"{cliOptions.AddressStart}/{cliOptions.AddressMask}");
+                    string? key = null;
+
+                    await foreach (string IP in _fileReader.ReadAsync(cliOptions.FileLog))
+                    {
+                        string[] lineData = IP.Split('|');
+                        string? ipAddress = lineData.FirstOrDefault();
+                        DateOnly dateTime = DateOnly.FromDateTime(DateTime.Parse(lineData.LastOrDefault()));
+                        key = $"{ipAddress} {dateTime.ToString("dd.MM.yyyy")}";
 
 
+                        if (dictIpAddresses.ContainsKey(key.ToString()))
+                            dictIpAddresses[key.ToString()]++;
+                        else if (true && rangeIP.Contains(IPAddress.Parse(ipAddress)))
+                            dictIpAddresses.Add(key.ToString(), 1);
+                    }
 
-                /*
-                                List<ArgumentStrategy> listStrategy = new List<ArgumentStrategy>()
-                                {
-                                    ActivatorUtilities.CreateInstance<CommandLineStrategy>(host.Services),
-                                    ActivatorUtilities.CreateInstance<ConfigFileStrategy>(host.Services),
-                                    ActivatorUtilities.CreateInstance<EnvironmentVariableStrategy>(host.Services)
-                                };
-                                CommandLineContext CLIContext = new CommandLineContext();
+                    await _fileWriter.WriteAsync(cliOptions.FileOutput, dictIpAddresses.Select(t => $"{t.Key} Count: {t.Value}"));
 
-                                foreach (ArgumentStrategy item in listStrategy)
-                                {
-                                    CLIContext.SwitchToStrategy(item);
-                                    IsSuccess = await CLIContext.ArgumentProcessAsync(args);
-                                    if (IsSuccess)
-                                        break;
-                                }
-                */
-
-
-
-
-
+                }
 
 
             }
@@ -132,37 +120,15 @@ namespace IPRangeCheckConsole
                 };
 
                 configuration.AddCommandLine(args, dictArg)
-                               .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                               .AddEnvironmentVariables();
+                    .AddIniFile("config.ini", optional: true, reloadOnChange: true)
+                   .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                   .AddEnvironmentVariables();
+
+
 
                 Log.Information("Переменные среды успешно добавлены!");
                 if (args.Length > 0)
                     Log.Information("Аргументы командной строки загружены в приложение успешно!");
-                /*                if (!File.Exists("appsettings.json"))
-                                {
-                                    Log.Warning("Конфигурационный файл не найден!");
-
-                                }
-                                else
-                                {
-                                    JsonSchema jsonSchema = JsonSchema.FromType<CLIOptionsSchema>();
-                                    string? jsonStrFromFile = await File.ReadAllTextAsync("appsettings.Json");
-                                    var errors = jsonSchema.Validate(jsonStrFromFile);
-
-                                    if (errors.Count != 0)
-                                    {
-                                        Log.Warning("Конфигурационный файл имеет неверный формат данных!");
-                                    }
-                                    else
-                                    {
-
-                                        Log.Information("Конфигурационный файл загружен в приложение успешно!");
-                                    }
-                                }*/
-
-
-
-
             }).ConfigureServices((app, services) =>
             {
 

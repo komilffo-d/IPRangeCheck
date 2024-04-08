@@ -6,7 +6,7 @@ using System.Globalization;
 
 namespace IPRangeCheckConsole
 {
-    internal static  class Startup
+    internal static class Startup
     {
 
         public static void Initialize()
@@ -26,7 +26,8 @@ namespace IPRangeCheckConsole
             try
             {
                 string? dir = Path.GetDirectoryName(filePath);
-                if (!Directory.Exists(Path.GetDirectoryName(dir))){
+                if (!Directory.Exists(Path.GetDirectoryName(dir)))
+                {
                     Log.Error($"Сгенерировать файл логов не выйдет из-за неправильного пути '{filePath}'.");
                     return;
                 }
