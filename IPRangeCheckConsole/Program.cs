@@ -1,13 +1,13 @@
 ﻿using FluentValidation;
 using IPRangeCheckConsole.Interfaces;
 using IPRangeCheckConsole.Misc;
-using IPRangeCheckConsole.Misc.CommandLineState;
 using IPRangeCheckConsole.Services;
 using IPRangeCheckConsole.Validators;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using System.Globalization;
 
 
 namespace IPRangeCheckConsole
@@ -46,7 +46,7 @@ namespace IPRangeCheckConsole
             }
             errorsList.Clear();
 
-        } 
+        }
         static async Task Main(string[] args)
         {
             Startup.Initialize();
@@ -61,56 +61,41 @@ namespace IPRangeCheckConsole
 
                 var conf = host.Services.GetService<IConfiguration>();
 
-                var coll = conf.GetChildren();
                 CLIOptionsValidator _validator = new CLIOptionsValidator();
-                List<string> errorProperty = new List<string>();
                 CLIOptions cliOptions = new CLIOptions()
                 {
-                    FileLog= conf["CMD_FILE_LOG"],
-                    FileOutput = conf["CMD_FILE_OUTPUT"],
-                    AddressStart = conf["CMD_ADDRESS_START"],
-                    AddressMask = conf["CMD_ADDRESS_MASK"],
-                    TimeStart = conf["CMD_TIME_START"],
-                    TimeEnd = conf["CMD_TIME_END"],
+                    FileLog = conf["FILE_LOG"],
+                    FileOutput = conf["FILE_OUTPUT"],
+                    AddressStart = conf["ADDRESS_START"],
+                    AddressMask = conf["ADDRESS_MASK"],
+                    TimeStart = DateOnly.TryParseExact(conf["TIME_START"], "dd.MM.yyyy", null, DateTimeStyles.None, out DateOnly timeStart) ? timeStart : null,
+                    TimeEnd = DateOnly.TryParseExact(conf["TIME_END"], "dd.MM.yyyy", null, DateTimeStyles.None, out DateOnly timeEnd) ? timeEnd : null,
                 };
-
-                var result=_validator.Validate(cliOptions);
+                var result = _validator.Validate(cliOptions);
+                if (result.Errors.Count > 0)
+                    Log.Error("Переданы не все аргументы или переданы в неверном формате:");
                 foreach (var error in result.Errors)
-                {
-                    errorProperty.Add(error.PropertyName);
-               
+                    Log.Error($"--> {error.ErrorMessage} <--");
 
 
-                }
 
-                NullProperty(cliOptions, errorProperty);
+                /*
+                                List<ArgumentStrategy> listStrategy = new List<ArgumentStrategy>()
+                                {
+                                    ActivatorUtilities.CreateInstance<CommandLineStrategy>(host.Services),
+                                    ActivatorUtilities.CreateInstance<ConfigFileStrategy>(host.Services),
+                                    ActivatorUtilities.CreateInstance<EnvironmentVariableStrategy>(host.Services)
+                                };
+                                CommandLineContext CLIContext = new CommandLineContext();
 
-                cliOptions = new CLIOptions()
-                {
-                    FileLog = cliOptions.FileLog ?? conf["JSON_FILE_LOG"],
-                    FileOutput = cliOptions.FileOutput ??conf["JSON_FILE_OUTPUT"],
-                    AddressStart = cliOptions.AddressStart ?? conf["JSON_ADDRESS_START"],
-                    AddressMask = cliOptions.AddressMask ?? conf["JSON_ADDRESS_MASK"],
-                    TimeStart = cliOptions.TimeStart ?? conf["JSON_TIME_START"],
-                    TimeEnd = cliOptions.TimeEnd ?? conf["JSON_TIME_END"],
-                };
-
-                List<ArgumentStrategy> listStrategy = new List<ArgumentStrategy>()
-                {
-                    ActivatorUtilities.CreateInstance<CommandLineStrategy>(host.Services),
-                    ActivatorUtilities.CreateInstance<ConfigFileStrategy>(host.Services),
-                    ActivatorUtilities.CreateInstance<EnvironmentVariableStrategy>(host.Services)
-                };
-                CommandLineContext CLIContext = new CommandLineContext();
-
-                foreach (ArgumentStrategy item in listStrategy)
-                {
-                    CLIContext.SwitchToStrategy(item);
-                    IsSuccess = await CLIContext.ArgumentProcessAsync(args);
-                    if (IsSuccess)
-                        break;
-                }
-
+                                foreach (ArgumentStrategy item in listStrategy)
+                                {
+                                    CLIContext.SwitchToStrategy(item);
+                                    IsSuccess = await CLIContext.ArgumentProcessAsync(args);
+                                    if (IsSuccess)
+                                        break;
+                                }
+                */
 
 
 
@@ -119,9 +104,9 @@ namespace IPRangeCheckConsole
 
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Log.Fatal("Произошла критическая ошибка выполнения программы! Просим перезапустить ПО.");
+                Log.Fatal("Произошла критическая ошибка выполнения программы! Просим перезапустить ПО." + ex);
             }
             if (IsSuccess)
                 Log.Information("Работа приложения выполнена успешно!");
@@ -138,17 +123,17 @@ namespace IPRangeCheckConsole
             {
                 var dictArg = new Dictionary<string, string>()
                 {
-                    { "--file-log", "CMD_FILE_LOG" },
-                    { "--file-output", "CMD_FILE_OUTPUT" },
-                    { "--address-start", "CMD_ADDRESS_START" },
-                    { "--address-mask", "CMD_ADDRESS_MASK" },
-                    { "--time-start", "CMD_TIME_START" },
-                    { "--time-end", "CMD_TIME_END" },
+                    { "--file-log", "FILE_LOG" },
+                    { "--file-output", "FILE_OUTPUT" },
+                    { "--address-start", "ADDRESS_START" },
+                    { "--address-mask", "ADDRESS_MASK" },
+                    { "--time-start", "TIME_START" },
+                    { "--time-end", "TIME_END" },
                 };
 
-                configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                               .AddEnvironmentVariables()
-                               .AddCommandLine(args, dictArg);
+                configuration.AddCommandLine(args, dictArg)
+                               .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                               .AddEnvironmentVariables();
 
                 Log.Information("Переменные среды успешно добавлены!");
                 if (args.Length > 0)

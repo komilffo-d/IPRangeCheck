@@ -16,7 +16,7 @@ namespace IPRangeCheckWinForms
             {
                 string appPath = textBox1.Text;
                 string appConf = textBox2.Text;
-                ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = appPath, Arguments= "--file-log \"C:\\Users\\Daniil\\Downloads\\log.txt\" --file-output \"C:\\Users\\Daniil\\Downloads\\output.txt\" --address-start 192.168.0.7 --address-mask 255.255.255.0 --time-start 29.03.2001 --time-end 01.01.2024" };
+                ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = appPath, Arguments= Extensions.GetDataGridViewArgimentCommandLine(dataGridView1) };
 
 
                 if (radioButton1.Checked && appConf.Length > 0)
@@ -29,9 +29,9 @@ namespace IPRangeCheckWinForms
                     {
                         string key = row.Cells[0].Value?.ToString();
                         string value = row.Cells[1].Value?.ToString();
-                        if (!string.IsNullOrEmpty(key))
+                        if (!string.IsNullOrEmpty(key) && !string.IsNullOrEmpty(value))
                         {
-                            startInfo.Environment[key] = value ?? string.Empty;
+                            startInfo.Environment[key] = value;
                         }
                     }
                 }
