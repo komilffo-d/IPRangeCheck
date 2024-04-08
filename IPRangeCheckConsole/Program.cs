@@ -25,53 +25,48 @@ namespace IPRangeCheckConsole
             IHost host = null;
             try
             {
+                Log.Information("Начато формирование хоста...");
                 host = CreateHostBuilder(args).Build();
-            }
-            catch (FormatException ex)
-            {
-                Log.Fatal("Неправильно сформированный JSON или INI файл.");
-            }
-
-            try
-            {
-
-                Log.Information("Начато формирование хоста.");
-
-
                 Log.Information("Хост собран.");
+            }
+            catch
+            {
+                Log.Fatal("Хост не собран!.Неправильно перадан сформированный JSON или INI файл.");
+                Console.ReadKey();
+                return;
+            }
 
+            var configuration = host.Services.GetService<IConfiguration>();
+            var _fileReader = host.Services.GetService<IFileReader>();
+            var _fileWriter = host.Services.GetService<IFileWriter>();
 
-                var conf = host.Services.GetService<IConfiguration>();
+            CLIOptionsValidator _validator = new CLIOptionsValidator();
+            CLIOptions cliOptions = new CLIOptions()
+            {
+                FileLog = configuration["FILE_LOG"],
+                FileOutput = configuration["FILE_OUTPUT"],
+                AddressStart = configuration["ADDRESS_START"] ?? "0.0.0.0",
+                AddressMask = configuration["ADDRESS_MASK"] ?? "0.0.0.0",
+                TimeStart = DateOnly.TryParseExact(configuration["TIME_START"], "dd.MM.yyyy", null, DateTimeStyles.None, out DateOnly timeStart) ? timeStart : null,
+                TimeEnd = DateOnly.TryParseExact(configuration["TIME_END"], "dd.MM.yyyy", null, DateTimeStyles.None, out DateOnly timeEnd) ? timeEnd : null,
+            };
+            var result = _validator.Validate(cliOptions);
 
-                var _fileReader = host.Services.GetService<IFileReader>();
-                var _fileWriter = host.Services.GetService<IFileWriter>();
+            IsSuccess = !(result.Errors.Count > 0);
 
-                CLIOptionsValidator _validator = new CLIOptionsValidator();
-                CLIOptions cliOptions = new CLIOptions()
+            if (!IsSuccess)
+            {
+                Log.Error("Переданы не все аргументы или переданы в неверном формате:");
+                foreach (var error in result.Errors)
+                    Log.Error($"--> {error.ErrorMessage} <--");
+            }
+            else
+            {
+                Dictionary<string, int> dictIpAddresses = new Dictionary<string, int>();
+                IPAddressRange rangeIP = IPAddressRange.Parse($"{cliOptions.AddressStart}/{cliOptions.AddressMask}");
+                string? key = null;
+                try
                 {
-                    FileLog = conf["FILE_LOG"],
-                    FileOutput = conf["FILE_OUTPUT"],
-                    AddressStart = conf["ADDRESS_START"],
-                    AddressMask = conf["ADDRESS_MASK"],
-                    TimeStart = DateOnly.TryParseExact(conf["TIME_START"], "dd.MM.yyyy", null, DateTimeStyles.None, out DateOnly timeStart) ? timeStart : null,
-                    TimeEnd = DateOnly.TryParseExact(conf["TIME_END"], "dd.MM.yyyy", null, DateTimeStyles.None, out DateOnly timeEnd) ? timeEnd : null,
-                };
-                var result = _validator.Validate(cliOptions);
-                IsSuccess = !(result.Errors.Count > 0);
-                if (!IsSuccess)
-                {
-                    Log.Error("Переданы не все аргументы или переданы в неверном формате:");
-
-                    foreach (var error in result.Errors)
-                        Log.Error($"--> {error.ErrorMessage} <--");
-                }
-                else
-                {
-                    Dictionary<string, int> dictIpAddresses = new Dictionary<string, int>();
-
-                    IPAddressRange rangeIP = IPAddressRange.Parse($"{cliOptions.AddressStart}/{cliOptions.AddressMask}");
-                    string? key = null;
-
                     await foreach (string IP in _fileReader.ReadAsync(cliOptions.FileLog))
                     {
                         string[] lineData = IP.Split('|');
@@ -87,15 +82,15 @@ namespace IPRangeCheckConsole
                     }
 
                     await _fileWriter.WriteAsync(cliOptions.FileOutput, dictIpAddresses.Select(t => $"{t.Key} Count: {t.Value}"));
-
+                }
+                catch
+                {
+                    Log.Error("Возникла ошибка во время записи файла. Возможно, передан неверный входной файл.");
                 }
 
 
             }
-            catch (Exception ex)
-            {
-                Log.Fatal("Произошла критическая ошибка выполнения программы! Просим перезапустить ПО." + ex);
-            }
+
             if (IsSuccess)
                 Log.Information("Работа приложения выполнена успешно!");
             else
