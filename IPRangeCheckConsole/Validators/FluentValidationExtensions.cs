@@ -1,4 +1,7 @@
 ﻿using FluentValidation;
+using IPRangeCheckConsole.Misc;
+using IPRangeGenerator.Misc;
+using Newtonsoft.Json.Linq;
 using System.Net;
 
 namespace IPRangeCheckConsole.Validators
@@ -11,23 +14,7 @@ namespace IPRangeCheckConsole.Validators
                        .Must(val =>
                        {
 
-                           string[] octets = val.Split('.');
-
-
-                           if (octets.Length != 4) return false;
-
-                           foreach (var octet in octets)
-                           {
-                               int q;
-
-                               if (!int.TryParse(octet, out q)
-                                   || !q.ToString().Length.Equals(octet.Length)
-                                   || q < 0
-                                   || q > 255)
-                                   return false;
-
-                           }
-                           return IPAddress.TryParse(val, out _);
+                           return IPAddressUtility.IsValidIPv4(val) && IPAddress.TryParse(val, out _);
 
                        }).WithMessage("У свойства '{PropertyName}' неправильно задан формат IP-адреса.");
         }
@@ -90,16 +77,17 @@ namespace IPRangeCheckConsole.Validators
 
         }
 
-        public static IRuleBuilderOptions<T, string?> ValidateDateTime<T>(this IRuleBuilder<T, string?> ruleBuilder)
+        public static IRuleBuilderOptions<T, string> ValidateDateOnly<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
             return ruleBuilder
                        .Must(val =>
                        {
-                           var key = DateOnly.TryParseExact(val?.ToString(), "d.M.yyyy", out DateOnly dateOnly);
+                           var key = DateOnly.TryParseExact(val?.ToString(), "dd.MM.yyyy", out DateOnly dateOnly);
 
                            return key;
-                       }).WithMessage("У свойства '{PropertyName}' неправильно задана дата или её формат.");
+                       }).WithMessage("Свойство '{PropertyName}' должно иметь формат даты dd.MM.yyyy.");
 
         }
+
     }
 }

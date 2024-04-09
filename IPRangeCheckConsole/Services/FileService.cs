@@ -4,13 +4,10 @@ namespace IPRangeCheckConsole.Services
 {
     internal class FileService : IFileReader, IFileWriter
     {
-        public bool Read(string filePath)
-        {
-            throw new NotImplementedException();
-        }
-
         public async IAsyncEnumerable<string> ReadAsync(string filePath)
         {
+            if (!File.Exists(filePath))
+                throw new InvalidDataException("Передан не существующий путь к файлу!");
             using StreamReader reader = new StreamReader(filePath);
 
 

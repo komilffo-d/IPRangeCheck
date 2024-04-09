@@ -21,18 +21,25 @@ namespace IPRangeCheckWinForms
                 string appPath = textBox1.Text;
                 string appConf = textBox2.Text;
                 string configConf = textBox3.Text;
+
+                string appJson = $@"{Directory.GetCurrentDirectory()}\appsettings.json";
+                string congIni = $@"{Directory.GetCurrentDirectory()}\config.ini";
+
                 ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = appPath, Arguments = Extensions.GetDataGridViewArgimentCommandLine(dataGridView1) };
 
 
                 if (radioButton1.Checked && appConf.Length > 0)
-                {
-                    File.Copy(appConf, $@"{Directory.GetCurrentDirectory()}\appsettings.json", overwrite: true);
-                }
+                    File.Copy(appConf, appJson, overwrite: true);
+                else if (File.Exists(appJson))
+                    File.Delete(appJson);
+
+
                 if (radioButton2.Checked && configConf.Length > 0)
-                {
-                    File.Copy(configConf, $@"{Directory.GetCurrentDirectory()}\config.ini", overwrite: true);
-                }
-                else if (radioButton3.Checked)
+                    File.Copy(configConf, congIni, overwrite: true);
+                else if (File.Exists(congIni))
+                    File.Delete(congIni);
+
+                if (radioButton3.Checked)
                 {
                     foreach (DataGridViewRow row in dataGridView2.Rows)
                     {
@@ -173,13 +180,13 @@ namespace IPRangeCheckWinForms
                     {
                         iniParser.ReadFile(filePath);
                         pictureBox2.Image = Properties.Resources.green_cross;
-                        toolTip1.SetToolTip(pictureBox1, "Файл соответсвует правилам оформления INI.");
+                        toolTip1.SetToolTip(pictureBox2, "Файл соответсвует правилам оформления INI.");
                     }
                     catch (ParsingException ex)
                     {
                         pictureBox2.Image = Properties.Resources.red_cross;
 
-                        toolTip1.SetToolTip(pictureBox1, "Файл не соответсвует правилам оформления INI.");
+                        toolTip1.SetToolTip(pictureBox2, "Файл не соответсвует правилам оформления INI.");
                     }
 
                 }

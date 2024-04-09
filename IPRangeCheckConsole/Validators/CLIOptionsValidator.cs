@@ -17,25 +17,42 @@ namespace IPRangeCheckConsole.Validators
 
             RuleFor(opts => opts.FileOutput).NotEmpty()
                                             .WithMessage("Назначьте свойству '{PropertyName}' значение.")
-                                            .ValidateDirectoryPath().NotEqual(opts => opts.FileLog)
+                                            .ValidateDirectoryPath()
+                                            .NotEqual(opts => opts.FileLog)
                                             .WithMessage("Свойство '{PropertyName}' не должно быть равна входному пути.");
 
-            RuleFor(opts => opts.AddressStart).ValidateIPAddress().When(opts => !string.IsNullOrEmpty(opts.AddressStart));
+            RuleFor(opts => opts.AddressStart).ValidateIPAddress()
+                                            .When(opts => !string.IsNullOrEmpty(opts.AddressStart));
 
-            RuleFor(opts => opts.AddressMask).ValidateIPAddress().ValidateMaskIPAddress().When(opts => !string.IsNullOrEmpty(opts.AddressMask));
+            RuleFor(opts => opts.AddressMask)
+                                            .Empty()
+                                            .WithMessage("Так как не назначено свойство 'AddressStart' значение для '{PropertyName}' должно отсутствовать.")
+                                            .When(opts => opts.AddressStart is null)
+                                            .ValidateIPAddress()
+                                            .ValidateMaskIPAddress()
+                                            .When(opts => !string.IsNullOrEmpty(opts.AddressMask));
 
             RuleFor(opts => opts.TimeStart).NotEmpty()
-                                            .WithMessage("Назначьте свойству '{PropertyName}' значение.");
+                                            .WithMessage("Назначьте свойству '{PropertyName}' значение.")
+                                            .ValidateDateOnly()
+                                            .Must((obj, value) =>
+                                            {
 
-            RuleFor(opts => opts.TimeStart).LessThanOrEqualTo(opts => opts.TimeEnd)
-                                            .WithMessage("Свойство '{PropertyName}' должно быть меньше.")
-                                            .When(opts => opts.TimeEnd is not null);
+                                                return DateOnly.Parse(value) <= DateOnly.Parse(obj.TimeEnd);
+                                            }).WithMessage("Свойство '{PropertyName}' должно быть меньше.")
+                                            .When(opts => !string.IsNullOrEmpty(opts.TimeEnd), ApplyConditionTo.CurrentValidator);
 
             RuleFor(opts => opts.TimeEnd).NotEmpty()
-                                            .WithMessage("Назначьте свойству '{PropertyName}' значение");
+                                            .WithMessage("Назначьте свойству '{PropertyName}' значение.")
+                                            .ValidateDateOnly()
+                                            .Must((obj, value) =>
+                                            {
 
-            RuleFor(opts => opts.TimeEnd).GreaterThanOrEqualTo(opts => opts.TimeStart)
-                                        .WithMessage("Свойство '{PropertyName}' должно быть больше.").When(opts => opts.TimeStart is not null);
+                                                return DateOnly.Parse(value) >= DateOnly.Parse(obj.TimeStart);
+                                            })
+                                            .WithMessage("Свойство '{PropertyName}' должно быть больше.")
+                                            .When(opts => !string.IsNullOrEmpty(opts.TimeStart), ApplyConditionTo.CurrentValidator);
+
         }
     }
 }
