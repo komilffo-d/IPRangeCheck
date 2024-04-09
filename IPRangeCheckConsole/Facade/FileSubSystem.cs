@@ -5,7 +5,6 @@ using IPRangeGenerator;
 using IPRangeGenerator.Misc;
 using NetTools;
 using Serilog;
-using System.Collections;
 using System.Globalization;
 using System.Net;
 
@@ -43,12 +42,12 @@ namespace IPRangeCheckConsole.Facade
                     throw new InvalidDataException($"Неправильный формат входных данных! строка {countLine}");
 
                 DateOnly dateOnly = DateOnly.FromDateTime(tempDateTime);
-                string key = $"{ipAddress} {dateOnly.ToString("dd.MM.yyyy")}";
 
-                if (dictionaryIpAddresses.ContainsKey(key))
-                    dictionaryIpAddresses[key]++;
-                else if (dateOnly <= DateOnly.Parse(cliOptions.TimeEnd) && dateOnly >= DateOnly.Parse(cliOptions.TimeStart) && rangeIP.Contains(IPAddress.Parse(ipAddress)))
-                    dictionaryIpAddresses.Add(key, 1);
+                if (dateOnly <= DateOnly.Parse(cliOptions.TimeEnd) && dateOnly >= DateOnly.Parse(cliOptions.TimeStart) && rangeIP.Contains(IPAddress.Parse(ipAddress)))
+                    if (dictionaryIpAddresses.ContainsKey(ipAddress))
+                        dictionaryIpAddresses[ipAddress]++;
+                    else
+                        dictionaryIpAddresses.Add(ipAddress, 1);
                 countLine++;
             }
 
