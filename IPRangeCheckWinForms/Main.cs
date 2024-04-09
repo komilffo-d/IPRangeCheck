@@ -29,14 +29,10 @@ namespace IPRangeCheckWinForms
 
                 if (checkBox1.Checked && appConf != appJson && appConf.Length > 0)
                     File.Copy(appConf, appJson, overwrite: true);
-                else if (appConf != appJson && File.Exists(appJson))
-                    File.Delete(appJson);
 
 
                 if (checkBox2.Checked && configConf != congIni && configConf.Length > 0)
                     File.Copy(configConf, congIni, overwrite: true);
-                else if (configConf != congIni && File.Exists(congIni))
-                    File.Delete(congIni);
 
                 if (checkBox3.Checked)
                 {
@@ -45,9 +41,7 @@ namespace IPRangeCheckWinForms
                         string key = row.Cells[0].Value?.ToString();
                         string value = row.Cells[1].Value?.ToString();
                         if (!string.IsNullOrEmpty(key) && !string.IsNullOrEmpty(value))
-                        {
                             startInfo.Environment[key] = value;
-                        }
                     }
                 }
                 Process process = new Process();
@@ -86,7 +80,7 @@ namespace IPRangeCheckWinForms
         {
             using (OpenFileDialog openFileDialog1 = new OpenFileDialog())
             {
-                openFileDialog1.Filter = "Конфигурационный файл (*.json)|*.json";
+                openFileDialog1.Filter = "Конфигурационный файл (appsettings.json)|appsettings.json";
                 openFileDialog1.Title = "Выберите конфигурационный фай";
 
                 DialogResult result = openFileDialog1.ShowDialog();
@@ -132,7 +126,7 @@ namespace IPRangeCheckWinForms
         {
             using (OpenFileDialog openFileDialog1 = new OpenFileDialog())
             {
-                openFileDialog1.Filter = "Конфигурационный файл (*.ini)|*.ini";
+                openFileDialog1.Filter = "Конфигурационный файл (config.ini)|config.ini";
                 openFileDialog1.Title = "Выберите конфигурационный фай";
 
                 DialogResult result = openFileDialog1.ShowDialog();
