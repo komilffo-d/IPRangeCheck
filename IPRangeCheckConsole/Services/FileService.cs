@@ -2,7 +2,7 @@
 
 namespace IPRangeCheckConsole.Services
 {
-    internal class FileService : IFileReader, IFileWriter
+    public class FileService : IFileReader, IFileWriter
     {
         public async IAsyncEnumerable<string> ReadAsync(string filePath)
         {
