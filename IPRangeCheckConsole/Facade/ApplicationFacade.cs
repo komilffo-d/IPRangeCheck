@@ -47,8 +47,8 @@ namespace IPRangeCheckConsole.Facade
                     return 0;
                 }
 
-                var dictionaryIpAddresses = await _fileSubSystem.GetOutputDataAsync(cliOptions);
-                await _fileSubSystem.WriteOutputDataToFileAsync(cliOptions.FileOutput, dictionaryIpAddresses);
+                Dictionary<string, int> dictionaryIpAddresses = await _fileSubSystem.GetOutputDataAsync(cliOptions);
+                await _fileSubSystem.WriteOutputDataToFileAsync<KeyValuePair<string,int>>(cliOptions.FileOutput, dictionaryIpAddresses, t => $"{t.Key} Count: {t.Value}");
                 return 1;
             }
             catch (InvalidDataException ex)

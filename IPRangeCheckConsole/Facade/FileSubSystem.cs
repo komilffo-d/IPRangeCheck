@@ -5,6 +5,7 @@ using IPRangeGenerator;
 using IPRangeGenerator.Misc;
 using NetTools;
 using Serilog;
+using System.Collections;
 using System.Globalization;
 using System.Net;
 
@@ -38,7 +39,7 @@ namespace IPRangeCheckConsole.Facade
                     throw new InvalidDataException($"Неправильный формат входных данных! строка {countLine}");
                 string? dateTime = lineData.LastOrDefault();
 
-                if (string.IsNullOrEmpty(dateTime) || !DateTime.TryParseExact(dateTime, "yyyy-MM-dd HH:mm:ss", null,DateTimeStyles.None, out DateTime tempDateTime))
+                if (string.IsNullOrEmpty(dateTime) || !DateTime.TryParseExact(dateTime, "yyyy-MM-dd HH:mm:ss", null, DateTimeStyles.None, out DateTime tempDateTime))
                     throw new InvalidDataException($"Неправильный формат входных данных! строка {countLine}");
 
                 DateOnly dateOnly = DateOnly.FromDateTime(tempDateTime);
@@ -54,11 +55,11 @@ namespace IPRangeCheckConsole.Facade
             return dictionaryIpAddresses;
         }
 
-        public async Task WriteOutputDataToFileAsync(string fileOutput, IEnumerable<KeyValuePair<string, int>> data)
+        public async Task WriteOutputDataToFileAsync<T>(string fileOutput, IEnumerable<T> data, Func<T, string> func)
         {
             try
             {
-                await _fileWriter.WriteAsync(fileOutput, data.Select(t => $"{t.Key} Count: {t.Value}"));
+                await _fileWriter.WriteAsync(fileOutput, data.Select(func));
             }
             catch (InvalidDataException ex)
             {

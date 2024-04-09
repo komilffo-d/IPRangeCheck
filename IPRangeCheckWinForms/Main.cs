@@ -29,10 +29,13 @@ namespace IPRangeCheckWinForms
 
                 if (checkBox1.Checked && appConf != appJson && appConf.Length > 0)
                     File.Copy(appConf, appJson, overwrite: true);
-
+                else if (!checkBox1.Checked && File.Exists(appJson))
+                    File.Delete(appJson);
 
                 if (checkBox2.Checked && configConf != congIni && configConf.Length > 0)
                     File.Copy(configConf, congIni, overwrite: true);
+                else if (!checkBox2.Checked && File.Exists(congIni))
+                    File.Delete(congIni);
 
                 if (checkBox3.Checked)
                 {
