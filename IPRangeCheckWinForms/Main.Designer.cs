@@ -36,16 +36,16 @@
             Key = new DataGridViewTextBoxColumn();
             Value = new DataGridViewTextBoxColumn();
             groupBox1 = new GroupBox();
+            checkBox3 = new CheckBox();
+            checkBox2 = new CheckBox();
+            checkBox1 = new CheckBox();
             pictureBox2 = new PictureBox();
             pictureBox1 = new PictureBox();
             textBox3 = new TextBox();
-            radioButton2 = new RadioButton();
             dataGridView2 = new DataGridView();
             EnvKey = new DataGridViewTextBoxColumn();
             EnvValue = new DataGridViewTextBoxColumn();
             textBox2 = new TextBox();
-            radioButton3 = new RadioButton();
-            radioButton1 = new RadioButton();
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();
@@ -105,19 +105,51 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(checkBox3);
+            groupBox1.Controls.Add(checkBox2);
+            groupBox1.Controls.Add(checkBox1);
             groupBox1.Controls.Add(pictureBox2);
             groupBox1.Controls.Add(pictureBox1);
             groupBox1.Controls.Add(textBox3);
-            groupBox1.Controls.Add(radioButton2);
             groupBox1.Controls.Add(dataGridView2);
             groupBox1.Controls.Add(textBox2);
-            groupBox1.Controls.Add(radioButton3);
-            groupBox1.Controls.Add(radioButton1);
             groupBox1.Location = new Point(32, 308);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(435, 310);
             groupBox1.TabIndex = 3;
             groupBox1.TabStop = false;
+            // 
+            // checkBox3
+            // 
+            checkBox3.AutoSize = true;
+            checkBox3.Location = new Point(20, 186);
+            checkBox3.Name = "checkBox3";
+            checkBox3.Size = new Size(138, 34);
+            checkBox3.TabIndex = 10;
+            checkBox3.Text = "Переменные среды \r\nпроцесса\r\n";
+            checkBox3.UseVisualStyleBackColor = true;
+            // 
+            // checkBox2
+            // 
+            checkBox2.AutoSize = true;
+            checkBox2.Location = new Point(16, 117);
+            checkBox2.Name = "checkBox2";
+            checkBox2.Size = new Size(138, 34);
+            checkBox2.TabIndex = 9;
+            checkBox2.Text = "Конфигурационный\r\n файл config.ini";
+            toolTip1.SetToolTip(checkBox2, "Файл скопируется в каталог приложения");
+            checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // checkBox1
+            // 
+            checkBox1.AutoSize = true;
+            checkBox1.Location = new Point(16, 38);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(142, 34);
+            checkBox1.TabIndex = 8;
+            checkBox1.Text = "Конфигурационный\r\n файл appsetting.json";
+            toolTip1.SetToolTip(checkBox1, "Файл скопируется в каталог приложения");
+            checkBox1.UseVisualStyleBackColor = true;
             // 
             // pictureBox2
             // 
@@ -146,23 +178,10 @@
             textBox3.TabIndex = 5;
             textBox3.Click += textBox3_Click;
             // 
-            // radioButton2
-            // 
-            radioButton2.AutoSize = true;
-            radioButton2.Location = new Point(17, 110);
-            radioButton2.Name = "radioButton2";
-            radioButton2.Size = new Size(137, 34);
-            radioButton2.TabIndex = 4;
-            radioButton2.Text = "Конфигурационный\r\n файл config.ini";
-            toolTip1.SetToolTip(radioButton2, "Файл скопируется в каталог приложения");
-            radioButton2.UseVisualStyleBackColor = true;
-            radioButton2.CheckedChanged += radioButton_CheckedChanged;
-            // 
             // dataGridView2
             // 
             dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView2.Columns.AddRange(new DataGridViewColumn[] { EnvKey, EnvValue });
-            dataGridView2.Enabled = false;
             dataGridView2.Location = new Point(176, 185);
             dataGridView2.Name = "dataGridView2";
             dataGridView2.RowHeadersVisible = false;
@@ -189,29 +208,6 @@
             textBox2.Size = new Size(222, 23);
             textBox2.TabIndex = 2;
             textBox2.Click += textBox2_Click;
-            // 
-            // radioButton3
-            // 
-            radioButton3.AutoSize = true;
-            radioButton3.Location = new Point(21, 210);
-            radioButton3.Name = "radioButton3";
-            radioButton3.Size = new Size(137, 34);
-            radioButton3.TabIndex = 1;
-            radioButton3.Text = "Переменные среды \r\nпроцесса";
-            radioButton3.UseVisualStyleBackColor = true;
-            radioButton3.CheckedChanged += radioButton_CheckedChanged;
-            // 
-            // radioButton1
-            // 
-            radioButton1.AutoSize = true;
-            radioButton1.Location = new Point(17, 35);
-            radioButton1.Name = "radioButton1";
-            radioButton1.Size = new Size(141, 34);
-            radioButton1.TabIndex = 0;
-            radioButton1.Text = "Конфигурационный\r\n файл appsetting.json";
-            toolTip1.SetToolTip(radioButton1, "Файл скопируется в каталог приложения");
-            radioButton1.UseVisualStyleBackColor = true;
-            radioButton1.CheckedChanged += radioButton_CheckedChanged;
             // 
             // label1
             // 
@@ -277,8 +273,6 @@
         private DataGridView dataGridView1;
         private GroupBox groupBox1;
         private TextBox textBox2;
-        private RadioButton radioButton3;
-        private RadioButton radioButton1;
         private DataGridView dataGridView2;
         private DataGridViewTextBoxColumn Key;
         private DataGridViewTextBoxColumn Value;
@@ -288,9 +282,11 @@
         private Label label2;
         private Label label3;
         private ToolTip toolTip1;
-        private RadioButton radioButton2;
         private TextBox textBox3;
         private PictureBox pictureBox1;
         private PictureBox pictureBox2;
+        private CheckBox checkBox3;
+        private CheckBox checkBox2;
+        private CheckBox checkBox1;
     }
 }

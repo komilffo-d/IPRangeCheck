@@ -11,7 +11,6 @@ namespace IPRangeCheckWinForms
         public Main()
         {
             InitializeComponent();
-            radioButton1.Checked = true;
         }
         // Да-да...Знаю, что здесь можно применить паттерн "Медиатор" и "Команда" - не использовал из-за маленьких сроков
         private void button1_Click(object sender, EventArgs e)
@@ -28,18 +27,18 @@ namespace IPRangeCheckWinForms
                 ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = appPath, Arguments = Extensions.GetDataGridViewArgimentCommandLine(dataGridView1) };
 
 
-                if (radioButton1.Checked && appConf != appJson && appConf.Length > 0)
+                if (checkBox1.Checked && appConf != appJson && appConf.Length > 0)
                     File.Copy(appConf, appJson, overwrite: true);
                 else if (appConf != appJson && File.Exists(appJson))
                     File.Delete(appJson);
 
 
-                if (radioButton2.Checked && configConf != congIni && configConf.Length > 0)
+                if (checkBox2.Checked && configConf != congIni && configConf.Length > 0)
                     File.Copy(configConf, congIni, overwrite: true);
                 else if (configConf != congIni && File.Exists(congIni))
                     File.Delete(congIni);
 
-                if (radioButton3.Checked)
+                if (checkBox3.Checked)
                 {
                     foreach (DataGridViewRow row in dataGridView2.Rows)
                     {
@@ -77,8 +76,8 @@ namespace IPRangeCheckWinForms
                 {
 
                     textBox1.Text = openFileDialog1.FileName;
-                    dataGridView1.Enabled = true;
-                    button1.Enabled = true;
+                    EnableComponent(dataGridView1);
+                    EnableComponent(button1);
                 }
             }
         }
@@ -101,6 +100,7 @@ namespace IPRangeCheckWinForms
                     {
                         JObject.Parse(jsonContent);
                         pictureBox1.Image = Properties.Resources.green_cross;
+                        checkBox1.Checked = true;
                         toolTip1.SetToolTip(pictureBox1, "Файл соответсвует правилам оформления JSON.");
                     }
                     catch (JsonReaderException ex)
@@ -112,41 +112,7 @@ namespace IPRangeCheckWinForms
                 }
             }
         }
-        private void radioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            RadioButton radioButton = sender as RadioButton;
-            if (radioButton != null && radioButton.Checked)
-            {
-                if (radioButton == radioButton1)
-                {
-                    DisableComponent(textBox3);
-                    DisableComponent(dataGridView2);
-                    DisableComponent(pictureBox2);
 
-                    EnableComponent(pictureBox1);
-                    EnableComponent(textBox2);
-                }
-                else if (radioButton == radioButton2)
-                {
-                    DisableComponent(textBox2);
-                    DisableComponent(dataGridView2);
-                    DisableComponent(pictureBox1);
-
-                    EnableComponent(pictureBox2);
-                    EnableComponent(textBox3);
-
-                }
-                else if (radioButton == radioButton3)
-                {
-                    DisableComponent(textBox2);
-                    DisableComponent(textBox3);
-                    DisableComponent(pictureBox1);
-                    DisableComponent(pictureBox2);
-
-                    EnableComponent(dataGridView2);
-                }
-            }
-        }
         private void DisableComponent(Control control)
         {
             if (control is DataGridView dataGridView)
@@ -180,6 +146,7 @@ namespace IPRangeCheckWinForms
                     {
                         iniParser.ReadFile(filePath);
                         pictureBox2.Image = Properties.Resources.green_cross;
+                        checkBox2.Checked = true;
                         toolTip1.SetToolTip(pictureBox2, "Файл соответсвует правилам оформления INI.");
                     }
                     catch (ParsingException ex)
