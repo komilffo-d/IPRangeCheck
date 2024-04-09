@@ -51,7 +51,7 @@ namespace IPRangeCheckConsole.Services
             IEnumerable<DateTime> dateTimes = _DateTimeGenerator.GenerateEnumerableInRange(countEntries, isInclusive);
 
             IEnumerable<string> collection = ipAddresses.Zip(dateTimes, (ip, dateTime) => (IP: ip, DateTime: dateTime))
-                                                        .Select(t => $"{t.IP};{t.DateTime.ToString("yyyy-MM-dd HH:mm:ss")}");
+                                                        .Select(t => $"{t.IP}:{t.DateTime.ToString("yyyy-MM-dd HH:mm:ss")}");
 
             await _fileService.Value.WriteAsync(pathFile, collection);
         }
