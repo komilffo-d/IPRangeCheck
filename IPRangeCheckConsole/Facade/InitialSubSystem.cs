@@ -51,7 +51,7 @@ namespace IPRangeCheckConsole.Facade
                 };
 
 
-                if (FileTemplateValidParse.IsParseIniAsync("config.ini").GetAwaiter().GetResult())
+                if (FileTemplateValidParse.IsParseIni("config.ini"))
                     configuration.AddIniFile("config.ini", optional: true, reloadOnChange: true);
                 if (FileTemplateValidParse.IsParseJsonAsync("appsettings.json").GetAwaiter().GetResult())
                     configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);

@@ -1,4 +1,5 @@
-﻿using IniParser.Exceptions;
+﻿using IniParser;
+using IniParser.Exceptions;
 using IniParser.Model.Configuration;
 using IniParser.Parser;
 using IPRangeCheckConsole.Interfaces;
@@ -49,7 +50,7 @@ namespace IPRangeCheckConsole.Services
             return isSuccess;
         }
 
-        public static async Task<bool> IsParseIniAsync(string filePath)
+        public static bool IsParseIni(string filePath)
         {
             if (!File.Exists(filePath))
             {
@@ -64,20 +65,10 @@ namespace IPRangeCheckConsole.Services
             }
 
             bool isSuccess = false;
-            StringBuilder iniContent = new StringBuilder();
-            await foreach (string line in _fileReader.Value.ReadAsync(filePath))
-                iniContent.Append(line);
-            IniDataParser iniParser = new IniDataParser(new IniParserConfiguration()
-            {
-                AllowKeysWithoutSection = false,
-                AllowCreateSectionsOnFly = false,
-                AllowDuplicateKeys = false,
-                AllowDuplicateSections = false,
-                SkipInvalidLines = false
-            });
+            FileIniDataParser iniParser = new FileIniDataParser();
             try
             {
-                iniParser.Parse(iniContent.ToString());
+                iniParser.ReadFile(filePath);
                 isSuccess = true;
                 Log.Information("Файл INI является пригодным для использования!");
             }
