@@ -35,23 +35,16 @@ namespace IPRangeCheckConsole.Validators
             RuleFor(opts => opts.TimeStart).NotEmpty()
                                             .WithMessage("Назначьте свойству '{PropertyName}' значение.")
                                             .ValidateDateOnly()
-                                            .Must((obj, value) =>
-                                            {
-
-                                                return DateOnly.Parse(value) <= DateOnly.Parse(obj.TimeEnd);
-                                            }).WithMessage("Свойство '{PropertyName}' должно быть меньше.")
-                                            .When(opts => !string.IsNullOrEmpty(opts.TimeEnd), ApplyConditionTo.CurrentValidator);
-
+                                            .Must((opts, value) => DateOnly.Parse(value) <= DateOnly.Parse(opts.TimeEnd))
+                                            .WithMessage("Свойство '{PropertyName}' должно быть меньше.")
+                                            .When((opts, value) => !string.IsNullOrEmpty(opts.TimeEnd) && DateOnly.TryParseExact(opts.TimeEnd, "dd.MM.yyyy", out DateOnly dateOnly), ApplyConditionTo.CurrentValidator);
+            
             RuleFor(opts => opts.TimeEnd).NotEmpty()
                                             .WithMessage("Назначьте свойству '{PropertyName}' значение.")
                                             .ValidateDateOnly()
-                                            .Must((obj, value) =>
-                                            {
-
-                                                return DateOnly.Parse(value) >= DateOnly.Parse(obj.TimeStart);
-                                            })
+                                            .Must((opts, value) => DateOnly.Parse(value) >= DateOnly.Parse(opts.TimeStart))
                                             .WithMessage("Свойство '{PropertyName}' должно быть больше.")
-                                            .When(opts => !string.IsNullOrEmpty(opts.TimeStart), ApplyConditionTo.CurrentValidator);
+                                            .When((opts, value) => !string.IsNullOrEmpty(opts.TimeStart) && DateOnly.TryParseExact(opts.TimeStart, "dd.MM.yyyy", out DateOnly dateOnly), ApplyConditionTo.CurrentValidator);
 
         }
     }
