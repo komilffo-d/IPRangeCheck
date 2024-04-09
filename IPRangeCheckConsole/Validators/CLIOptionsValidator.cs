@@ -11,13 +11,13 @@ namespace IPRangeCheckConsole.Validators
 
             RuleFor(opts => opts.FileLog).NotEmpty()
                                         .WithMessage("Назначьте свойству '{PropertyName}' значение.")
-                                        .ValidateFilePath()
+                                        .ValidateExistFilePath()
                                         .NotEqual(opts => opts.FileOutput)
                                         .WithMessage("Свойство '{PropertyName}' не должно быть равна выходному пути.");
 
             RuleFor(opts => opts.FileOutput).NotEmpty()
                                             .WithMessage("Назначьте свойству '{PropertyName}' значение.")
-                                            .ValidateDirectoryPath()
+                                            .ValidateFilePath()
                                             .NotEqual(opts => opts.FileLog)
                                             .WithMessage("Свойство '{PropertyName}' не должно быть равна входному пути.");
 

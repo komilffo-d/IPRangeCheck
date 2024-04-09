@@ -37,11 +37,11 @@ namespace IPRangeCheckConsole.Services
 
             try
             {
-                JObject.Parse(jsonContent.ToString());
+                JToken.Parse(jsonContent.ToString());
                 isSuccess = true;
                 Log.Information("Файл JSON является пригодным для использования!");
             }
-            catch (JsonReaderException ex)
+            catch
             {
                 isSuccess = false;
                 Log.Warning("Файл JSON не является пригодным для использования!");
@@ -72,7 +72,7 @@ namespace IPRangeCheckConsole.Services
                 isSuccess = true;
                 Log.Information("Файл INI является пригодным для использования!");
             }
-            catch (ParsingException ex)
+            catch
             {
                 isSuccess = false;
                 Log.Information("Файл INI не является пригодным для использования!");

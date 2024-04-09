@@ -1,7 +1,5 @@
 ﻿using FluentValidation;
-using IPRangeCheckConsole.Misc;
 using IPRangeGenerator.Misc;
-using Newtonsoft.Json.Linq;
 using System.Net;
 
 namespace IPRangeCheckConsole.Validators
@@ -28,7 +26,7 @@ namespace IPRangeCheckConsole.Validators
                            {
                                var bytes = ipAddress.GetAddressBytes();
                                bool onlyOne = false;
-                               for (int i = bytes.Length - 1; i >=0; i--)
+                               for (int i = bytes.Length - 1; i >= 0; i--)
                                {
                                    for (int j = 0; j < 8; j++)
                                    {
@@ -48,7 +46,7 @@ namespace IPRangeCheckConsole.Validators
                        }).WithMessage("У свойства '{PropertyName}' неправильно задана IP-маска.");
         }
 
-        public static IRuleBuilderOptions<T, string> ValidateFilePath<T>(this IRuleBuilder<T, string> ruleBuilder)
+        public static IRuleBuilderOptions<T, string> ValidateExistFilePath<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
             return ruleBuilder
                        .Must(val =>
@@ -63,12 +61,12 @@ namespace IPRangeCheckConsole.Validators
 
         }
 
-        public static IRuleBuilderOptions<T, string> ValidateDirectoryPath<T>(this IRuleBuilder<T, string> ruleBuilder)
+        public static IRuleBuilderOptions<T, string> ValidateFilePath<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
             return ruleBuilder
                        .Must(val =>
                        {
-                           if (Path.IsPathFullyQualified(val) && !Path.GetInvalidPathChars().Any(val.Contains) && Directory.Exists(Path.GetDirectoryName(val)))
+                           if (Path.IsPathFullyQualified(val) && !Path.GetInvalidPathChars().Any(val.Contains) && Directory.Exists(Path.GetDirectoryName(val)) && Path.GetFileName(val) != null)
                            {
                                return true;
                            }
