@@ -31,17 +31,18 @@ namespace IPRangeCheckConsole.Services
                 return false;
             }
             bool isSuccess = false;
-            StringBuilder jsonContent = new StringBuilder();
+            StringBuilder jsonContentBuilder = new StringBuilder();
             await foreach (string line in _fileReader.Value.ReadAsync(filePath))
-                jsonContent.Append(line);
+                jsonContentBuilder.Append(line);
 
+            string jsonContent = jsonContentBuilder.ToString();
             try
             {
-                JToken.Parse(jsonContent.ToString());
+                JContainer.Parse(jsonContent);
                 isSuccess = true;
                 Log.Information("Файл JSON является пригодным для использования!");
             }
-            catch
+            catch(JsonReaderException)
             {
                 isSuccess = false;
                 Log.Warning("Файл JSON не является пригодным для использования!");
@@ -72,7 +73,7 @@ namespace IPRangeCheckConsole.Services
                 isSuccess = true;
                 Log.Information("Файл INI является пригодным для использования!");
             }
-            catch
+            catch(ParsingException)
             {
                 isSuccess = false;
                 Log.Information("Файл INI не является пригодным для использования!");

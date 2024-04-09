@@ -38,7 +38,7 @@ namespace IPRangeCheckConsole.Facade
         public IHostBuilder CreateHostBuilder(string[] args)
         {
             Log.Information("Начато формирование хоста...");
-            return Host.CreateDefaultBuilder(args).ConfigureAppConfiguration((app, configuration) =>
+            return new HostBuilder().ConfigureAppConfiguration((app, configuration) =>
             {
                 var dictArg = new Dictionary<string, string>()
                 {
@@ -62,7 +62,7 @@ namespace IPRangeCheckConsole.Facade
 
             }).ConfigureServices((app, services) =>
             {
-
+               
                 services.AddScoped<IFileReader, FileService>()
                         .AddScoped<IFileWriter, FileService>()
                         .AddScoped<IValidator<CLIOptions>, CLIOptionsValidator>();
