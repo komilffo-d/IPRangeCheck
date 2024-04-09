@@ -30,7 +30,7 @@ namespace IPRangeCheckConsole.Facade
             int countLine = 1;
             await foreach (string line in _fileReader.ReadAsync(cliOptions.FileLog))
             {
-                string[] lineData = line.Split('|');
+                string[] lineData = line.Split(';');
                 if (lineData.Length != 2)
                     throw new InvalidDataException($"Неправильный формат входных данных! строка {countLine}");
                 string? ipAddress = lineData.FirstOrDefault();
