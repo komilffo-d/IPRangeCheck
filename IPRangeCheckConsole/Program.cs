@@ -32,6 +32,8 @@ namespace IPRangeCheckConsole
             ConsoleService.ConsoleWriteLineCenter("PRESS KEY");
             Console.ReadKey();
             Environment.Exit(code);
+
+            //Проводилось только модульное тестирование - без интеграционного
         }
 
     }
