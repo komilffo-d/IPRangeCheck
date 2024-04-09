@@ -28,15 +28,15 @@ namespace IPRangeCheckWinForms
                 ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = appPath, Arguments = Extensions.GetDataGridViewArgimentCommandLine(dataGridView1) };
 
 
-                if (radioButton1.Checked && appConf.Length > 0)
+                if (radioButton1.Checked && appConf != appJson && appConf.Length > 0)
                     File.Copy(appConf, appJson, overwrite: true);
-                else if (File.Exists(appJson))
+                else if (appConf != appJson && File.Exists(appJson))
                     File.Delete(appJson);
 
 
-                if (radioButton2.Checked && configConf.Length > 0)
+                if (radioButton2.Checked && configConf != congIni && configConf.Length > 0)
                     File.Copy(configConf, congIni, overwrite: true);
-                else if (File.Exists(congIni))
+                else if (configConf != congIni && File.Exists(congIni))
                     File.Delete(congIni);
 
                 if (radioButton3.Checked)
