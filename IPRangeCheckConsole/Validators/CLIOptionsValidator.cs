@@ -13,16 +13,19 @@ namespace IPRangeCheckConsole.Validators
                                         .WithMessage("Назначьте свойству '{PropertyName}' значение.")
                                         .ValidateExistFilePath()
                                         .NotEqual(opts => opts.FileOutput)
-                                        .WithMessage("Свойство '{PropertyName}' не должно быть равна выходному пути.");
+                                        .WithMessage("Свойство '{PropertyName}' не должно быть равна выходному пути.")
+                                        .WithName("FILE_LOG");
 
             RuleFor(opts => opts.FileOutput).NotEmpty()
                                             .WithMessage("Назначьте свойству '{PropertyName}' значение.")
                                             .ValidateFilePath()
                                             .NotEqual(opts => opts.FileLog)
-                                            .WithMessage("Свойство '{PropertyName}' не должно быть равна входному пути.");
+                                            .WithMessage("Свойство '{PropertyName}' не должно быть равна входному пути.")
+                                            .WithName("FILE_OUTPUT");
 
             RuleFor(opts => opts.AddressStart).ValidateIPAddress()
-                                            .When(opts => !string.IsNullOrEmpty(opts.AddressStart));
+                                            .When(opts => !string.IsNullOrEmpty(opts.AddressStart))
+                                            .WithName("ADDRESS_START");
 
             RuleFor(opts => opts.AddressMask)
                                             .Empty()
@@ -30,21 +33,24 @@ namespace IPRangeCheckConsole.Validators
                                             .When(opts => opts.AddressStart is null)
                                             .ValidateIPAddress()
                                             .ValidateMaskIPAddress()
-                                            .When(opts => !string.IsNullOrEmpty(opts.AddressMask));
+                                            .When(opts => !string.IsNullOrEmpty(opts.AddressMask))
+                                            .WithName("ADDRESS_MASK");
 
             RuleFor(opts => opts.TimeStart).NotEmpty()
                                             .WithMessage("Назначьте свойству '{PropertyName}' значение.")
                                             .ValidateDateOnly()
                                             .Must((opts, value) => DateOnly.Parse(value) <= DateOnly.Parse(opts.TimeEnd))
                                             .WithMessage("Свойство '{PropertyName}' должно быть меньше.")
-                                            .When((opts, value) => !string.IsNullOrEmpty(opts.TimeEnd) && DateOnly.TryParseExact(opts.TimeEnd, "dd.MM.yyyy", out DateOnly dateOnly), ApplyConditionTo.CurrentValidator);
-            
+                                            .When((opts, value) => !string.IsNullOrEmpty(opts.TimeEnd) && DateOnly.TryParseExact(opts.TimeEnd, "dd.MM.yyyy", out DateOnly dateOnly), ApplyConditionTo.CurrentValidator)
+                                            .WithName("TIME_START");
+
             RuleFor(opts => opts.TimeEnd).NotEmpty()
                                             .WithMessage("Назначьте свойству '{PropertyName}' значение.")
                                             .ValidateDateOnly()
                                             .Must((opts, value) => DateOnly.Parse(value) >= DateOnly.Parse(opts.TimeStart))
                                             .WithMessage("Свойство '{PropertyName}' должно быть больше.")
-                                            .When((opts, value) => !string.IsNullOrEmpty(opts.TimeStart) && DateOnly.TryParseExact(opts.TimeStart, "dd.MM.yyyy", out DateOnly dateOnly), ApplyConditionTo.CurrentValidator);
+                                            .When((opts, value) => !string.IsNullOrEmpty(opts.TimeStart) && DateOnly.TryParseExact(opts.TimeStart, "dd.MM.yyyy", out DateOnly dateOnly), ApplyConditionTo.CurrentValidator)
+                                            .WithName("TIME_END");
 
         }
     }

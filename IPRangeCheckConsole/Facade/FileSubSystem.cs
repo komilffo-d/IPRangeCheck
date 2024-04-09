@@ -62,12 +62,10 @@ namespace IPRangeCheckConsole.Facade
             }
             catch (InvalidDataException ex)
             {
-                Log.Error("Путь к файлу остутствует!");
                 throw;
             }
             catch (Exception ex)
             {
-                Log.Fatal("Возникла ошибка во время записи файла.", ex);
                 throw;
             }
         }

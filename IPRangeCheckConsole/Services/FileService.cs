@@ -1,5 +1,4 @@
 ﻿using IPRangeCheckConsole.Interfaces;
-using System.Linq;
 
 namespace IPRangeCheckConsole.Services
 {
@@ -8,7 +7,7 @@ namespace IPRangeCheckConsole.Services
         public async IAsyncEnumerable<string> ReadAsync(string filePath)
         {
             if (!File.Exists(filePath))
-                throw new InvalidDataException("Передан не существующий путь к файлу!");
+                throw new InvalidDataException($"Передан несуществующий путь к файлу! | {nameof(ReadAsync)}");
             using StreamReader reader = new StreamReader(filePath);
 
 
@@ -22,8 +21,9 @@ namespace IPRangeCheckConsole.Services
 
         public async Task WriteAsync(string filePath, IEnumerable<string> values)
         {
-            if (!File.Exists(filePath))
-                throw new InvalidDataException("Передан не существующий путь к файлу!");
+
+            if (!Directory.Exists(Path.GetDirectoryName(filePath)))
+                throw new InvalidDataException($"Передана не существующая директория! | {nameof(WriteAsync)}");
             // await для очистки буффера
             await using (var writer = new StreamWriter(filePath, false))
             {
@@ -32,7 +32,7 @@ namespace IPRangeCheckConsole.Services
                     await writer.WriteLineAsync(line);
                 }
             }
-            
+
 
         }
     }
