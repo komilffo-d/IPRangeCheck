@@ -54,10 +54,10 @@ namespace IPRangeCheckConsole.Validators
 
                            FileInfo fileInfo = new FileInfo(val);
 
-                           if (!fileInfo.Exists)
+                           if (!fileInfo.Exists || fileInfo.Extension != ".txt")
                                return false;
                            return true;
-                       }).WithMessage("У свойства '{PropertyName}' неправильно задан путь к файлу.");
+                       }).WithMessage("У свойства '{PropertyName}' неправильно задан путь к файлу txt.");
 
         }
 
@@ -66,12 +66,17 @@ namespace IPRangeCheckConsole.Validators
             return ruleBuilder
                        .Must(val =>
                        {
-                           if (Path.IsPathFullyQualified(val) && !Path.GetInvalidPathChars().Any(val.Contains) && Directory.Exists(Path.GetDirectoryName(val)) && Path.GetFileName(val) != null)
+                           FileInfo fileInfo = new FileInfo(val);
+
+                           if (Path.IsPathFullyQualified(val) &&
+                            !Path.GetInvalidPathChars().Any(val.Contains) &&
+                            Directory.Exists(Path.GetDirectoryName(val)) &&
+                            fileInfo.Extension==".txt")
                            {
                                return true;
                            }
                            return false;
-                       }).WithMessage("У свойства '{PropertyName}' неправильно задан путь к директории.");
+                       }).WithMessage("У свойства '{PropertyName}' неправильно задан путь к выходному файлу txt.");
 
         }
 
@@ -83,7 +88,7 @@ namespace IPRangeCheckConsole.Validators
                            var key = DateOnly.TryParseExact(val?.ToString(), "dd.MM.yyyy", out DateOnly dateOnly);
 
                            return key;
-                       }).WithMessage("Свойство '{PropertyName}' должно иметь формат даты dd.MM.yyyy.");
+                       }).WithMessage("Свойство '{PropertyName}' должно иметь формат даты dd.MM.yyyy и быть реальной датой.");
 
         }
 
