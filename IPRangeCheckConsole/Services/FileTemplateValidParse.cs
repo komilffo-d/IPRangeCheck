@@ -76,7 +76,7 @@ namespace IPRangeCheckConsole.Services
             catch(ParsingException)
             {
                 isSuccess = false;
-                Log.Information("Файл INI не является пригодным для использования!");
+                Log.Warning("Файл INI не является пригодным для использования!");
 
             }
             return isSuccess;
