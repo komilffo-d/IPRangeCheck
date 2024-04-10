@@ -1,5 +1,3 @@
-![image](https://github.com/komilffo-d/IPRangeCheck/assets/74680206/e6b37f2c-4788-4827-8c03-0bddc258e4e8)# IPRangeCheck
-
 # Hi, I'm Daniil! 👋
 This is software that allows you to extract the number of requests from an IP address in a specified time interval from a log file with an IP address and date time.
 
