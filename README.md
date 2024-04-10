@@ -19,7 +19,7 @@ This is software that allows you to extract the number of requests from an IP ad
 
 ## Tech Stack
 
-**Client:** .NET 8 C#, WinForms, xUnit, FluentValidation,N JsonSchema, Newtonsoft.Json,Serilog,  IPAddressPange, CommandLineParser, IHostBuilder Microsoft, Facade/Singleton/Decorator patterns
+**Client:** .NET 8 C#, WinForms, xUnit, FluentValidation, NJsonSchema, Newtonsoft.Json, Serilog, IPAddressPange, CommandLineParser, IHostBuilder Microsoft, Facade/Singleton/Decorator patterns.
 
 
 ## Screenshots
